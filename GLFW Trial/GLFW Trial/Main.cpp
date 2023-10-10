@@ -5,6 +5,8 @@
 #include <GL/glew.h>
 #include <iostream>
 
+#include "ShaderUtil.h"
+
 //Function to handle GLFW errors
 void error_callback(int error, const char* description)
 {
@@ -56,85 +58,8 @@ int main()
 
 	//==============
 
-
-	//define the source for the shader as a pointer to an array of char
-	const GLchar* vertexShaderSource = R"(
-        #version 330
-
-        in vec3 vertex;
-        in vec3 color;
-
-        out vec3 fColor;
-
-        void main ()
-        {
-            gl_Position = vec4(vertex,1);
-            fColor = color;
-        }
-    )";
-
-
-	//create a vertex shader
-	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-	//load shader source onto GPU: we only have 1 bit of source to load, which is null terminated
-	glShaderSource(vertexShaderID, 1, &vertexShaderSource, NULL);
-
-	//compile shader ON GPU
-	GLint success;
-	GLchar infoLog[512];
-	glCompileShader(vertexShaderID);
-	glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShaderID, 512, NULL, infoLog);
-		std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	//define the source for the shader as a pointer to an array of char
-	const GLchar* fragmentShaderSource = R"(
-        #version 330
-
-        in vec3 fColor;
-        out vec4 sColor;
-
-        void main ()
-        {
-            sColor = vec4(fColor, 1);
-        }
-    )";
-
-	//create a fragment shader
-	GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-	//load shader source onto GPU: we only have 1 bit of source to load, which is null terminated
-	glShaderSource(fragmentShaderID, 1, &fragmentShaderSource, NULL);
-	//compile shader ON GPU, without error checking for now for brevity
-	GLint success;
-	GLchar infoLog[512];
-	glCompileShader(vertexShaderID);
-	glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShaderID, 512, NULL, infoLog);
-		std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	//first create the program ID
-	GLuint programID = glCreateProgram();
-	//now attach the shaders to the program and link
-	glAttachShader(programID, vertexShaderID);
-	glAttachShader(programID, fragmentShaderID);
-	GLint success;
-	GLchar infoLog[512];
-	glLinkProgram(programID);
-	glGetProgramiv(programID, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(programID, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-	}
-
-	//since the vertex and fragment shaders are linked to the program we can delete them
-	glDeleteShader(vertexShaderID);
-	glDeleteShader(fragmentShaderID);
+	//Create the shader program
+	GLuint programID = ShaderUtil::createProgram("vertexshader.vs", "fragmentshader.fs");
 
 	//declare the data to upload
 	const GLfloat vertices[] = {
@@ -144,12 +69,36 @@ int main()
 		-0.5f, 0.5f, 0
 	};
 
+	//create a handle to the buffer
+	GLuint vertexBufferId;
+	glGenBuffers(1, &vertexBufferId);
+	//bind our buffer to the GL_ARRAY_BUFFER endpoint, since none was bound yet,
+	//a new array buffer for vertex position data will be created
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+	//stream all our data to the array buffer endpoint to which our vertexPositionsBufferId is connected
+	//note that vertexPositionsBufferId is not mentioned, instead the ARRAY_BUFFER is set as the data "sink"
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	//disconnect the funnel
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	const GLfloat colors[]{
 		//1 triangle, 3 vertices per triangle, 1 color per vertex, 3 "floats" per color RGB = 9 floats in total
 		1,0,0,
 		0,1,0,
 		0,0,1
 	};
+
+	//create a handle to the buffer
+	GLuint colorBufferId;
+	glGenBuffers(1, &colorBufferId);
+	//bind our buffer to the GL_ARRAY_BUFFER endpoint, since none was bound yet,
+	//a new array buffer for vertex color data will be created
+	glBindBuffer(GL_ARRAY_BUFFER, colorBufferId);
+	//stream all our data to the array buffer endpoint to which our vertexColorsBufferId is connected
+	//note that vertexColorsBufferId is not mentioned, instead the ARRAY_BUFFER is set as the data "sink"
+	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+	//disconnect the funnel
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//==============
 
@@ -168,7 +117,7 @@ int main()
 		//tell the GPU to use this program
 		glUseProgram(programID);
 
-		//get index for the different attributes in the shader
+		//get index for the attributes in the shader
 		GLint vertexIndex = glGetAttribLocation(programID, "vertex");
 		GLint colorIndex = glGetAttribLocation(programID, "color");
 
@@ -176,11 +125,18 @@ int main()
 		glEnableVertexAttribArray(vertexIndex);
 		glEnableVertexAttribArray(colorIndex);
 
+		//bind the buffer with data.
+		//the moment this buffer is bound instead of 0, the last param of glVertexAttribPointer
+		//is interpreted as an offset and not a pointer
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
 		//send the data for this index to OpenGL, specifying it's format and structure
 		//vertexIndex // 3 bytes per element // floats // don't normalize // the data itself
-		glVertexAttribPointer(vertexIndex, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+		glVertexAttribPointer(vertexIndex, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		//send the data for this index to OpenGL, specifying it's format and structure
 		//colorIndex // 3 bytes per element // floats // don't normalize // the data itself
-		glVertexAttribPointer(colorIndex, 3, GL_FLOAT, GL_FALSE, 0, colors);
+		glBindBuffer(GL_ARRAY_BUFFER, colorBufferId);
+		glVertexAttribPointer(colorIndex, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 		//Draws elements from each enabled array using the specified mode (which is default for Unity etc as well)
 		glDrawArrays(GL_TRIANGLES, 0, 3);
