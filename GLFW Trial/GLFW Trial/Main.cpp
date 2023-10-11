@@ -5,7 +5,10 @@
 #include <GL/glew.h>
 #include <iostream>
 
-#include "ShaderUtil.h"
+#include "loaders/ShaderUtil.h"
+//#include "loaders/Texture.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include "loaders/stb_image.h"
 
 //Function to handle GLFW errors
 void error_callback(int error, const char* description)
@@ -59,14 +62,15 @@ int main()
 	//==============
 
 	//Create the shader program
-	GLuint programID = ShaderUtil::createProgram("vertexshader.vs", "fragmentshader.fs");
+	GLuint programID = ShaderUtil::createProgram("texture.vert", "texture.frag");
 
 	//declare the data to upload
 	const GLfloat vertices[] = {
-		//1 triangle, 3 vertices per triangle, 3 floats per vertex = 9 floats in total
-		-0.5f, -0.5f, 0,
-		0.5f, -0.5f, 0,
-		-0.5f, 0.5f, 0
+		//2 triangles forming a rectangle, 3 vertices per triangle, 3 floats per vertex = 12 floats in total
+		-0.5f,  0.5f, 0.0f,  // Top left
+		-0.5f, -0.5f, 0.0f,  // Bottom left
+		0.5f,  0.5f, 0.0f,  // Top right
+		0.5f, -0.5f, 0.0f,  // Bottom right
 	};
 
 	//create a handle to the buffer
@@ -81,24 +85,56 @@ int main()
 	//disconnect the funnel
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	const GLfloat colors[]{
-		//1 triangle, 3 vertices per triangle, 1 color per vertex, 3 "floats" per color RGB = 9 floats in total
-		1,0,0,
-		0,1,0,
-		0,0,1
+	//get index for the attributes in the shader
+	GLint vertexIndex = glGetAttribLocation(programID, "vertex");
+	"textures/bricks.jpg";
+
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	// set the texture wrapping/filtering options (on the currently bound texture object)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load and generate the texture
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load("textures/bricks.jpg", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+
+	GLint uDiffuseTexture = glGetUniformLocation(programID, "diffuseTexture");
+
+	//declare the data to upload
+	const GLfloat uvs[] = {
+		//2 triangles, 3 vertices per triangle, 2 floats per vertex = 12 floats in total
+		0.0f, 0.0f,  // Bottom left corner
+		1.0f, 0.0f,  // Bottom right corner
+		0.0f, 1.0f,  // Top left corner
+		1.0f, 1.0f   // Top right corner
 	};
 
 	//create a handle to the buffer
-	GLuint colorBufferId;
-	glGenBuffers(1, &colorBufferId);
+	GLuint uvsBufferId;
+	glGenBuffers(1, &uvsBufferId);
 	//bind our buffer to the GL_ARRAY_BUFFER endpoint, since none was bound yet,
-	//a new array buffer for vertex color data will be created
-	glBindBuffer(GL_ARRAY_BUFFER, colorBufferId);
-	//stream all our data to the array buffer endpoint to which our vertexColorsBufferId is connected
-	//note that vertexColorsBufferId is not mentioned, instead the ARRAY_BUFFER is set as the data "sink"
-	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+	//a new array buffer for vertex position data will be created
+	glBindBuffer(GL_ARRAY_BUFFER, uvsBufferId);
+	//stream all our data to the array buffer endpoint to which our vertexPositionsBufferId is connected
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uvs), uvs, GL_STATIC_DRAW);
 	//disconnect the funnel
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//get index for the attributes in the shader
+	GLint uvIndex = glGetAttribLocation(programID, "uv");
 
 	//==============
 
@@ -110,21 +146,14 @@ int main()
 		//Clear the color buffer
 		glClear(GL_COLOR_BUFFER_BIT);
 
-
 		//==============
 		
 		//Update loop
 		//tell the GPU to use this program
 		glUseProgram(programID);
 
-		//get index for the attributes in the shader
-		GLint vertexIndex = glGetAttribLocation(programID, "vertex");
-		GLint colorIndex = glGetAttribLocation(programID, "color");
-
 		//tell OpenGL that the data for the vertexIndex/colorIndex is coming in from an array
 		glEnableVertexAttribArray(vertexIndex);
-		glEnableVertexAttribArray(colorIndex);
-
 		//bind the buffer with data.
 		//the moment this buffer is bound instead of 0, the last param of glVertexAttribPointer
 		//is interpreted as an offset and not a pointer
@@ -133,16 +162,28 @@ int main()
 		//vertexIndex // 3 bytes per element // floats // don't normalize // the data itself
 		glVertexAttribPointer(vertexIndex, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
+		//tell OpenGL that the data for the vertexIndex/colorIndex is coming in from an array
+		glEnableVertexAttribArray(uvIndex);
+		//bind the buffer with data.
+		//the moment this buffer is bound instead of 0, the last param of glVertexAttribPointer
+		//is interpreted as an offset and not a pointer
+		glBindBuffer(GL_ARRAY_BUFFER, uvsBufferId);
 		//send the data for this index to OpenGL, specifying it's format and structure
-		//colorIndex // 3 bytes per element // floats // don't normalize // the data itself
-		glBindBuffer(GL_ARRAY_BUFFER, colorBufferId);
-		glVertexAttribPointer(colorIndex, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		//vertexIndex // 3 bytes per element // floats // don't normalize // the data itself
+		glVertexAttribPointer(uvIndex, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		//setup texture slot 0
+		glActiveTexture(GL_TEXTURE0);
+		//bind the texture to the current active slot
+		glBindTexture(GL_TEXTURE_2D, texture);
+		//tell the shader the texture slot for the diffuse texture is slot 0
+		glUniform1i(uDiffuseTexture, 0);
 
 		//Draws elements from each enabled array using the specified mode (which is default for Unity etc as well)
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 		glDisableVertexAttribArray(vertexIndex);
-		glDisableVertexAttribArray(colorIndex);
+		glDisableVertexAttribArray(uvIndex);
 
 		//==============
 
