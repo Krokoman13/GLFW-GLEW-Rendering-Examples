@@ -139,16 +139,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="graphics\DefaultImageVariables.cpp" />
     <ClCompile Include="graphics\Image.cpp" />
     <ClCompile Include="graphics\loaders\ShaderUtil.cpp" />
     <ClCompile Include="graphics\Texture.cpp" />
+    <ClCompile Include="graphics\window\Window.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="graphics\DefaultImageVariables.hpp" />
     <ClInclude Include="graphics\Image.hpp" />
     <ClInclude Include="graphics\loaders\ShaderUtil.h" />
-    <ClInclude Include="graphics\renderable.hpp" />
     <ClInclude Include="graphics\Texture.hpp" />
+    <ClInclude Include="graphics\window\Renderable.hpp" />
+    <ClInclude Include="graphics\window\Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,22 +1,17 @@
 #pragma once
 #include "Texture.hpp"
-#include "loaders/ShaderUtil.h"
+#include "window/Renderable.hpp"
 
-class Image
+class Image : public Renderable
 {
-private:
-	Texture m_texture;
-	GLfloat m_uvs[8];		// 2 triangles, 3 vertices per triangle, 2 floats per vertex = 8 floats in total
-
 public:
 	Image(const char* pFilePath);
 	virtual ~Image();
 
-	static bool Initialize();
-	bool Load();
-	void Display();
-
 public:
+	GLint minFilterParam = -1;
+	GLint magFilterParam = -1;
+
 	float x = 0.f;
 	float y = 0.f;
 
@@ -24,14 +19,23 @@ public:
 	float yScale = 1.f;
 
 private:
-	static bool s_initialized;
+	Texture m_texture;
 
-	static GLuint s_programID;
+	GLuint m_programID = -1;
 
-	static GLint s_vertexIndex;
-	static GLint s_diffuseTextureIndex;
-	static GLint s_uvIndex;
+	GLint m_vertexIndex = -1;
+	GLint m_diffuseTextureIndex = -1;
+	GLint m_uvIndex = -1;
+	GLint m_offsetIndex = -1;
+	GLint m_scaleIndex = -1;
 
-	static GLuint s_uvsBufferId;
-	static GLuint s_vertexBufferId;
+	GLuint m_uvsBufferId = -1;
+	GLuint m_vertexBufferId = -1;
+
+public:
+	virtual bool Load();
+	virtual void Display();
+
+private:
+	bool useDefaultImageVariables();
 };

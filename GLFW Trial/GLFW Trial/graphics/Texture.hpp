@@ -1,6 +1,3 @@
-#ifndef TEXTURE_HPP
-#define TEXTURE_HPP
-
 #include <map>
 #include <string>
 #include <GL/glew.h>
@@ -19,16 +16,16 @@ protected:
 	const char* m_filePath;
 	const bool loadCheck() const;
 
+	bool needsMipmaps(GLint a_param);
+
 public:
-	Texture(const char* pFilePath);
+	Texture(const char* a_filePath);
 	virtual ~Texture();
 
-	const bool Load();
+	const bool Load(GLint a_minFilterParam = GL_LINEAR, GLint a_magFilterParam = GL_LINEAR);
 
 	const unsigned int GetId() const;
 	const int GetWidth() const;
 	const int GetHeight() const;
 	inline const bool IsLoaded() const;
 };
-
-#endif // TEXTURE_HPP

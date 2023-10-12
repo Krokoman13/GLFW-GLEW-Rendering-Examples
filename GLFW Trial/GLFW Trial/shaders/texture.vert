@@ -11,6 +11,7 @@ uniform float rotation;
 out vec2 texCoord; //make sure the texture coord is interpolated
 
 void main( void ){
-    gl_Position = vec4(vertex * scale - offset, 0.f, 1.f);
+    gl_Position = vec4(vertex * scale + offset, 0.f, 1.f);
 	texCoord = uv;
 }
+
