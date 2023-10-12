@@ -139,17 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="loaders\Texture.cpp" />
+    <ClCompile Include="graphics\Image.cpp" />
+    <ClCompile Include="graphics\loaders\ShaderUtil.cpp" />
+    <ClCompile Include="graphics\Texture.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ShaderUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="loaders\Texture.hpp" />
-    <ClInclude Include="ShaderUtil.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shaders\texture.frag" />
-    <None Include="shaders\texture.vert" />
+    <ClInclude Include="graphics\Image.hpp" />
+    <ClInclude Include="graphics\loaders\ShaderUtil.h" />
+    <ClInclude Include="graphics\renderable.hpp" />
+    <ClInclude Include="graphics\Texture.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -25,7 +25,7 @@ public:
 
 	const bool Load();
 
-	unsigned int GetId() const;
+	const unsigned int GetId() const;
 	const int GetWidth() const;
 	const int GetHeight() const;
 	inline const bool IsLoaded() const;

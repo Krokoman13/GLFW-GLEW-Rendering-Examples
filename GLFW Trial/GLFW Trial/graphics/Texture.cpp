@@ -53,7 +53,7 @@ const bool Texture::loadCheck() const
     return true;
 }
 
-unsigned int Texture::GetId() const
+const unsigned int Texture::GetId() const
 {
     loadCheck();
 	return m_id;
