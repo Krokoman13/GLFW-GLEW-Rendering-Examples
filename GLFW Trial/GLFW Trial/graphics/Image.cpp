@@ -2,8 +2,9 @@
 #include <iostream>
 #include "DefaultImageVariables.hpp"
 
-Image::Image(const char* pFilePath) : m_texture(pFilePath)
+Image::Image(const char* pFilePath)
 {
+	m_texture = TextureMapper::Get(pFilePath);
 }
 
 Image::~Image()
@@ -19,7 +20,7 @@ bool Image::Load()
 	if (minFilterParam < 0) minFilterParam = DefaultImageVariables::minFilterParam;
 	if (magFilterParam < 0) magFilterParam = DefaultImageVariables::magFilterParam;
 
-	if (!m_texture.Load(minFilterParam, magFilterParam)) {
+	if (!m_texture.Get().Load(minFilterParam, magFilterParam)) {
 		std::cerr << "Error: Could not load texture" << std::endl;
 		succesful = false;
 	}
@@ -82,7 +83,7 @@ void Image::Display()
 	//setup texture slot 0
 	glActiveTexture(GL_TEXTURE0);
 	//bind the texture to the current active slot
-	glBindTexture(GL_TEXTURE_2D, m_texture.GetId());
+	glBindTexture(GL_TEXTURE_2D, m_texture.Get().GetId());
 	//tell the shader the texture slot for the diffuse texture is slot 0
 	glUniform1i(m_diffuseTextureIndex, 0);
 

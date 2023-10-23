@@ -1,5 +1,5 @@
 #pragma once
-#include "Texture.hpp"
+#include "Texture/TextureMapper.hpp"
 #include "window/Renderable.hpp"
 
 class Image : public Renderable
@@ -19,7 +19,7 @@ public:
 	float yScale = 1.f;
 
 private:
-	Texture m_texture;
+	MappedTexture m_texture;
 
 	GLuint m_programID = -1;
 

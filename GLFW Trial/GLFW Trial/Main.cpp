@@ -21,8 +21,8 @@ int main()
 	winImage->minFilterParam = winImage->magFilterParam = GL_NEAREST;
 	winImage->Load();
 
-	winImage->xScale = 1.5f;
-	winImage->yScale = 1.5f;
+	winImage->xScale = 1.f;
+	winImage->yScale = 1.f;
 	winImage->x = -1.f;
 	winImage->y = -1.f;
 
