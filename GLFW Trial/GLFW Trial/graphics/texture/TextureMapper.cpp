@@ -2,9 +2,9 @@
 #include <iostream>
 #include <memory>
 
-std::unordered_map <const char*, std::shared_ptr<Texture>> TextureMapper::m_textureMap = {};
+std::unordered_map <std::string_view, std::shared_ptr<Texture>> TextureMapper::m_textureMap = {};
 
-MappedTexture TextureMapper::Get(const char* a_filePath)
+MappedTexture TextureMapper::Get(std::string_view a_filePath)
 {
     // Check if the texture is already loaded
     auto it = m_textureMap.find(a_filePath);
@@ -14,7 +14,7 @@ MappedTexture TextureMapper::Get(const char* a_filePath)
     }
 
     std::cout << "Texture not yet mapped, texture will be mapped" << std::endl;
-    return m_textureMap[a_filePath] = std::make_shared<Texture>(a_filePath);
+    return m_textureMap[a_filePath] = std::make_shared<Texture>(a_filePath.data());
 }
 
 void TextureMapper::Release(const std::shared_ptr<Texture>& a_pTexture)

@@ -9,9 +9,6 @@ public:
 	virtual ~Image();
 
 public:
-	GLint minFilterParam = -1;
-	GLint magFilterParam = -1;
-
 	float x = 0.f;
 	float y = 0.f;
 
@@ -32,9 +29,14 @@ private:
 	GLuint m_uvsBufferId = -1;
 	GLuint m_vertexBufferId = -1;
 
+	GLint m_minFilterParam = -1;
+	GLint m_magFilterParam = -1;
+
 public:
 	virtual bool Load();
 	virtual void Display();
+
+	void SetFilterParam(GLint a_minFilter, GLint a_magFilter);
 
 private:
 	bool useDefaultImageVariables();

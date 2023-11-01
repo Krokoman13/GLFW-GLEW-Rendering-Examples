@@ -26,11 +26,11 @@ protected:
 	const char* m_filePath;
 	const bool loadCheck() const;
 
-	bool needsMipmaps(GLint a_param);
-
 public:
 	Texture(const char* a_filePath);
 	virtual ~Texture();
+
+	static bool NeedsMipmaps(GLint a_param);
 
 	bool Load(GLint a_minFilterParam = GL_LINEAR, GLint a_magFilterParam = GL_LINEAR);
 

@@ -17,10 +17,10 @@ bool Image::Load()
 {
 	bool succesful = true;
 
-	if (minFilterParam < 0) minFilterParam = DefaultImageVariables::minFilterParam;
-	if (magFilterParam < 0) magFilterParam = DefaultImageVariables::magFilterParam;
+	if (m_minFilterParam < 0) m_minFilterParam = DefaultImageVariables::minFilterParam;
+	if (m_magFilterParam < 0) m_magFilterParam = DefaultImageVariables::magFilterParam;
 
-	if (!m_texture.Get().Load(minFilterParam, magFilterParam)) {
+	if (!m_texture.Get().Load(m_minFilterParam, m_magFilterParam)) {
 		std::cerr << "Error: Could not load texture" << std::endl;
 		succesful = false;
 	}
@@ -49,6 +49,18 @@ bool Image::useDefaultImageVariables()
 	m_vertexBufferId = DefaultImageVariables::GetVertexBufferId();
 
 	return succesful;
+}
+
+void Image::SetFilterParam(GLint a_minFilter, GLint a_magFilter)
+{
+	if (Texture::NeedsMipmaps(a_magFilter))
+	{
+		std::cerr << "Warning: Mag filter cannot user mipmaps!";
+		return;
+	}
+
+	m_minFilterParam = a_minFilter;
+	m_magFilterParam = a_magFilter;
 }
 
 void Image::Display()

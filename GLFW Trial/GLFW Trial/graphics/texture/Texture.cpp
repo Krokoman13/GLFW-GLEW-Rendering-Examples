@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-bool Texture::needsMipmaps(GLint a_param)
+bool Texture::NeedsMipmaps(GLint a_param)
 {
 	return
 		a_param == GL_NEAREST_MIPMAP_NEAREST ||
@@ -24,7 +24,7 @@ bool Texture::Load(GLint a_minFilterParam, GLint a_magFilterParam)
 
 	m_loaded = false;
 
-	if (needsMipmaps(a_magFilterParam)) std::cerr << "Warning: Mag filter cannot user mipmaps!";
+	if (NeedsMipmaps(a_magFilterParam)) std::cerr << "Warning: Mag filter cannot user mipmaps!";
 
 	glGenTextures(1, &m_id);
 	GLenum err = glGetError();
@@ -47,7 +47,7 @@ bool Texture::Load(GLint a_minFilterParam, GLint a_magFilterParam)
 		// load and generate the texture
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		if (needsMipmaps(a_minFilterParam)) glGenerateMipmap(GL_TEXTURE_2D);
+		if (NeedsMipmaps(a_minFilterParam)) glGenerateMipmap(GL_TEXTURE_2D);
 		m_loaded = true;
 	}
 	else

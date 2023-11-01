@@ -17,8 +17,8 @@ int main()
 	Image* brickImage = new Image("textures/bricks.jpg");
 	brickImage->Load();
 
-	Image* winImage = new Image("textures/windowsImage.jpg");
-	winImage->minFilterParam = winImage->magFilterParam = GL_NEAREST;
+	Image* winImage = new Image("textures/bricks.jpg");
+	winImage->m_minFilterParam = winImage->m_magFilterParam = GL_NEAREST;
 	winImage->Load();
 
 	winImage->xScale = 1.f;
