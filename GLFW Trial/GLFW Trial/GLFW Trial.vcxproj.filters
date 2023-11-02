@@ -33,12 +33,6 @@
     <ClCompile Include="graphics\texture\Texture.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\texture\TextureMapper.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\texture\MappedTexture.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\Image.hpp">
@@ -59,10 +53,7 @@
     <ClInclude Include="graphics\texture\Texture.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\texture\TextureMapper.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\texture\MappedTexture.hpp">
+    <ClInclude Include="ResourceCache.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

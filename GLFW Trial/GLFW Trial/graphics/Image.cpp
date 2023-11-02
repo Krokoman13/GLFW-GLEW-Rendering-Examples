@@ -2,9 +2,10 @@
 #include <iostream>
 #include "DefaultImageVariables.hpp"
 
-Image::Image(const char* pFilePath)
+ResourceCache<Texture>* Image::pTextureCache = nullptr;
+
+Image::Image(const char* pFilePath) : m_texture(pTextureCache->Get(pFilePath))
 {
-	m_texture = TextureMapper::Get(pFilePath);
 }
 
 Image::~Image()

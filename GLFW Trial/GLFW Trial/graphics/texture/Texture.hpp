@@ -1,6 +1,7 @@
 #include <string>
 #include <GL/glew.h>
 
+
 class Texture
 {
 private:

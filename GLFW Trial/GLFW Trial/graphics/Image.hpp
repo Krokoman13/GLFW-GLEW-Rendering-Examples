@@ -1,6 +1,8 @@
 #pragma once
-#include "Texture/TextureMapper.hpp"
+#include "Texture/Texture.hpp"
 #include "window/Renderable.hpp"
+
+#include "../ResourceCache.hpp"
 
 class Image : public Renderable
 {
@@ -9,6 +11,8 @@ public:
 	virtual ~Image();
 
 public:
+	static ResourceCache<Texture>* pTextureCache;
+
 	float x = 0.f;
 	float y = 0.f;
 
@@ -16,7 +20,7 @@ public:
 	float yScale = 1.f;
 
 private:
-	MappedTexture m_texture;
+	CachedResource<Texture> m_texture;
 
 	GLuint m_programID = -1;
 

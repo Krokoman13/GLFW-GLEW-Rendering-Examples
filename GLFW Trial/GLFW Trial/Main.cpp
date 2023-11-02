@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
 #include <iostream>
+#include <memory>
 
 #include "graphics/Image.hpp"
 #include "graphics/window/Window.hpp"
@@ -12,13 +13,16 @@ int main()
 {
 	Window window("Rendering Texture", 640, 480);
 
+	ResourceCache<Texture> textureCache;
+	Image::pTextureCache = &textureCache;
+
 	//==============
 	
 	Image* brickImage = new Image("textures/bricks.jpg");
 	brickImage->Load();
 
 	Image* winImage = new Image("textures/bricks.jpg");
-	winImage->m_minFilterParam = winImage->m_magFilterParam = GL_NEAREST;
+	winImage->SetFilterParam(GL_NEAREST, GL_NEAREST);
 	winImage->Load();
 
 	winImage->xScale = 1.f;

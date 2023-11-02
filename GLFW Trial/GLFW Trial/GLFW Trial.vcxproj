@@ -144,9 +144,7 @@
     <ClCompile Include="graphics\DefaultImageVariables.cpp" />
     <ClCompile Include="graphics\Image.cpp" />
     <ClCompile Include="graphics\loaders\ShaderUtil.cpp" />
-    <ClCompile Include="graphics\texture\MappedTexture.cpp" />
     <ClCompile Include="graphics\texture\Texture.cpp" />
-    <ClCompile Include="graphics\texture\TextureMapper.cpp" />
     <ClCompile Include="graphics\window\Window.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
@@ -154,11 +152,10 @@
     <ClInclude Include="graphics\DefaultImageVariables.hpp" />
     <ClInclude Include="graphics\Image.hpp" />
     <ClInclude Include="graphics\loaders\ShaderUtil.h" />
-    <ClInclude Include="graphics\texture\MappedTexture.hpp" />
     <ClInclude Include="graphics\texture\Texture.hpp" />
-    <ClInclude Include="graphics\texture\TextureMapper.hpp" />
     <ClInclude Include="graphics\window\Renderable.hpp" />
     <ClInclude Include="graphics\window\Window.hpp" />
+    <ClInclude Include="ResourceCache.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

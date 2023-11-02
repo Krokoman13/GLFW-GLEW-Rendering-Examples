@@ -48,7 +48,6 @@ bool Texture::Load(GLint a_minFilterParam, GLint a_magFilterParam)
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		if (NeedsMipmaps(a_minFilterParam)) glGenerateMipmap(GL_TEXTURE_2D);
-		m_loaded = true;
 	}
 	else
 	{
@@ -58,13 +57,11 @@ bool Texture::Load(GLint a_minFilterParam, GLint a_magFilterParam)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, nullPixelData);
-
-		m_loaded = true;
 	}
 
 	stbi_image_free(data);
 
-	return m_loaded;
+	return m_loaded = true;
 }
 
 Texture::~Texture()
