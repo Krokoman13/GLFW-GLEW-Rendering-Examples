@@ -18,10 +18,13 @@ int main()
 
 	//==============
 	
+	//Image* bigImage = new Image("textures/veryBig.jpg");
+	//bigImage->Load();
+
 	Image* brickImage = new Image("textures/bricks.jpg");
 	brickImage->Load();
 
-	Image* winImage = new Image("textures/bricks.jpg");
+	Image* winImage = new Image("textures/windowsImage.jpg");
 	winImage->SetFilterParam(GL_NEAREST, GL_NEAREST);
 	winImage->Load();
 

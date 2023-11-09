@@ -4,7 +4,7 @@
 
 ResourceCache<Texture>* Image::pTextureCache = nullptr;
 
-Image::Image(const char* pFilePath) : m_texture(pTextureCache->Get(pFilePath))
+Image::Image(const char* pFilePath) : m_filepath(pFilePath)
 {
 }
 
@@ -21,7 +21,10 @@ bool Image::Load()
 	if (m_minFilterParam < 0) m_minFilterParam = DefaultImageVariables::minFilterParam;
 	if (m_magFilterParam < 0) m_magFilterParam = DefaultImageVariables::magFilterParam;
 
-	if (!m_texture.Get().Load(m_minFilterParam, m_magFilterParam)) {
+	if (pTextureCache) m_texture = pTextureCache->Get(m_filepath, m_minFilterParam, m_magFilterParam);
+	else m_texture = Texture(m_filepath, m_minFilterParam, m_magFilterParam);
+
+	if (!m_texture.SuccesfullLoad()) {
 		std::cerr << "Error: Could not load texture" << std::endl;
 		succesful = false;
 	}
@@ -96,7 +99,7 @@ void Image::Display()
 	//setup texture slot 0
 	glActiveTexture(GL_TEXTURE0);
 	//bind the texture to the current active slot
-	glBindTexture(GL_TEXTURE_2D, m_texture.Get().GetId());
+	glBindTexture(GL_TEXTURE_2D, m_texture.GetId());
 	//tell the shader the texture slot for the diffuse texture is slot 0
 	glUniform1i(m_diffuseTextureIndex, 0);
 

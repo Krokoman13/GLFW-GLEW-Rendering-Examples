@@ -20,7 +20,9 @@ public:
 	float yScale = 1.f;
 
 private:
-	CachedResource<Texture> m_texture;
+	const char* m_filepath;
+
+	Texture m_texture;
 
 	GLuint m_programID = -1;
 

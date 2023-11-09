@@ -33,7 +33,7 @@ bool DefaultImageVariables::Initialize()
 {
 	if (m_initialized)
 	{
-		std::cout << "DefaultImageVariables is already initialized, no longer needed!";
+		std::cout << "DefaultImageVariables is already initialized, no longer needed!" << std::endl;
 		return true;
 	}
 

@@ -2,66 +2,75 @@
 #include <unordered_map>
 #include <string_view>
 #include <iostream>
+#include <sstream>
+#include "Counted.hpp"
 
-template<typename T>
-class CachedResource;
+template<typename T, typename = std::enable_if_t<std::is_base_of<Counted, T>::value>>
 
-template<typename T>
 class ResourceCache
 {
 private:
-	friend class CachedResource<T>;
 	std::unordered_map <std::string_view, unsigned int> m_resourceMap;
 	std::vector<T> m_resources;
 
 	inline T& get(const unsigned int a_index) { return m_resources[a_index]; };
 
-	unsigned int addNewResouce(std::string_view a_filePath)
+	template<typename... Args>
+	std::string argsToString(Args... args)
 	{
-		const unsigned int index = m_resources.size();
-		m_resources.push_back(T(a_filePath.data()));
-		m_resourceMap[a_filePath] = index;
+		std::stringstream ss;
+		(ss << ... << args);
+		return ss.str();
+	}
+
+	template<typename... Args>
+	unsigned int addNewResouce(std::string_view a_stringView, Args... args)
+	{
+		const unsigned int index = findLonely();
+		if (index == m_resources.size())
+		{
+			m_resources.push_back(T(args...));
+		}
+		else
+		{
+			std::cout << "Found a lonely Resouce, will be overwritten by a new one!" << std::endl;
+			m_resources[index] = T(args...);
+		}
+
+		m_resourceMap[a_stringView] = index;
 		return index;
 	};
 
-public:
-	CachedResource<T> Get(std::string_view a_filePath);
-};
+	unsigned int findLonely()
+	{
+		const unsigned int size = m_resources.size();
 
-template<typename T>
-class CachedResource
-{
-private:
-	friend class ResourceCache<T>;
+		for (unsigned int i = 0; i < size; i++)
+		{
+			if (m_resources[i].Count() == 1) return i;
+		}
 
-	unsigned int m_index;
-	ResourceCache<T>& m_cache;
-
-private:
-	CachedResource(const unsigned int a_index, ResourceCache<T>& a_cache) : m_index(a_index), m_cache(a_cache) {};
+		return size;
+	};
 
 public:
-	CachedResource(const CachedResource<T>& a_other) : m_index(a_other.m_index), m_cache(a_other.m_cache) {};
-	~CachedResource() {};
+	template<typename... Args>
+	T Get(Args... args)
+	{
+		const std::string string = argsToString(args...);
 
-	inline T& Get() { return m_cache.get(m_index); };
-	T& operator->() { return Get(); };
+		// Check if the resource is already cached
+		auto it = m_resourceMap.find(stringView);
+		if (it != m_resourceMap.end()) {
+			std::cout << "Resource already mapped, returning cached resource!" << std::endl;
+			return m_resources[it->second];
+		}
+
+		std::cout << "Resource not yet mapped, resource will be mapped" << std::endl;
+
+		const unsigned int index = addNewResouce(stringView, args...);
+
+		return m_resources[index];
+	};
 };
-
-template<typename T>
-CachedResource<T> ResourceCache<T>::Get(std::string_view a_filePath)
-{
-	// Check if the resource is already cached
-	auto it = m_resourceMap.find(a_filePath);
-	if (it != m_resourceMap.end()) {
-		std::cout << "Resource already mapped, returning cached resource!" << std::endl;
-		return CachedResource<T>(it->second, *this);
-	}
-
-	std::cout << "Resource not yet mapped, resource will be mapped" << std::endl;
-
-	const unsigned int index = addNewResouce(a_filePath);
-
-	return CachedResource<T>(index, *this);
-}
 

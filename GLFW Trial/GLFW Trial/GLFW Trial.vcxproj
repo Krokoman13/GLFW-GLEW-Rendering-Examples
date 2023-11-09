@@ -149,6 +149,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Counted.hpp" />
     <ClInclude Include="graphics\DefaultImageVariables.hpp" />
     <ClInclude Include="graphics\Image.hpp" />
     <ClInclude Include="graphics\loaders\ShaderUtil.h" />

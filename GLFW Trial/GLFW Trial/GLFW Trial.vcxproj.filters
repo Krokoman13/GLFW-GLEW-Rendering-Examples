@@ -56,5 +56,8 @@
     <ClInclude Include="ResourceCache.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Counted.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
