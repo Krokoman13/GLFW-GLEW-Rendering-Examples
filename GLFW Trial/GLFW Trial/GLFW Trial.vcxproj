@@ -141,17 +141,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="core\math\DynamicFloatArray.cpp" />
+    <ClCompile Include="core\math\Matrix.cpp" />
+    <ClCompile Include="core\math\Matrix3.cpp" />
+    <ClCompile Include="core\math\Vec2.cpp" />
+    <ClCompile Include="core\Transform.cpp" />
     <ClCompile Include="graphics\DefaultImageVariables.cpp" />
-    <ClCompile Include="graphics\Image.cpp" />
+    <ClCompile Include="graphics\Sprite.cpp" />
     <ClCompile Include="graphics\loaders\ShaderUtil.cpp" />
     <ClCompile Include="graphics\texture\Texture.cpp" />
     <ClCompile Include="graphics\window\Window.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="core\math\DynamicFloatArray.hpp" />
+    <ClInclude Include="core\math\Matrix.hpp" />
+    <ClInclude Include="core\math\Matrix3.hpp" />
+    <ClInclude Include="core\math\Vec2.hpp" />
+    <ClInclude Include="core\Transform.hpp" />
     <ClInclude Include="Counted.hpp" />
     <ClInclude Include="graphics\DefaultImageVariables.hpp" />
-    <ClInclude Include="graphics\Image.hpp" />
+    <ClInclude Include="graphics\Sprite.hpp" />
     <ClInclude Include="graphics\loaders\ShaderUtil.h" />
     <ClInclude Include="graphics\texture\Texture.hpp" />
     <ClInclude Include="graphics\window\Renderable.hpp" />

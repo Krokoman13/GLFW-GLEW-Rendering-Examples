@@ -2,21 +2,21 @@
 #include <iostream>
 #include "loaders/ShaderUtil.h"
 
-bool DefaultImageVariables::m_initialized = false;
+bool DefaultSpriteVariables::m_initialized = false;
 
-GLuint DefaultImageVariables::m_programID = -1;
+GLuint DefaultSpriteVariables::m_programID = -1;
 
-GLint DefaultImageVariables::m_vertexIndex = -1;
-GLint DefaultImageVariables::m_diffuseTextureIndex = -1;
-GLint DefaultImageVariables::m_uvIndex = -1;
-GLint DefaultImageVariables::m_offsetIndex;
-GLint DefaultImageVariables::m_scaleIndex;
+GLint DefaultSpriteVariables::m_vertexIndex = -1;
+GLint DefaultSpriteVariables::m_diffuseTextureIndex = -1;
+GLint DefaultSpriteVariables::m_uvIndex = -1;
+GLint DefaultSpriteVariables::m_offsetIndex = -1;
+GLint DefaultSpriteVariables::m_axisIndex = -1;
 
-GLuint DefaultImageVariables::m_uvsBufferId = -1;
-GLuint DefaultImageVariables::m_vertexBufferId = -1;
+GLuint DefaultSpriteVariables::m_uvsBufferId = -1;
+GLuint DefaultSpriteVariables::m_vertexBufferId = -1;
 
-GLint DefaultImageVariables::minFilterParam = GL_LINEAR;
-GLint DefaultImageVariables::magFilterParam = GL_LINEAR;
+GLint DefaultSpriteVariables::minFilterParam = GL_LINEAR;
+GLint DefaultSpriteVariables::magFilterParam = GL_LINEAR;
 
 /*
 if (!m_initialized)
@@ -29,7 +29,7 @@ if (!m_initialized)
 }
 */
 
-bool DefaultImageVariables::Initialize()
+bool DefaultSpriteVariables::Initialize()
 {
 	if (m_initialized)
 	{
@@ -65,24 +65,24 @@ bool DefaultImageVariables::Initialize()
 		succesful = false;
 	}
 
-	m_scaleIndex = glGetUniformLocation(m_programID, "scale");
-	if (m_scaleIndex == -1) {
-		std::cerr << "Error: Could not get scale atribute" << std::endl;
+	m_offsetIndex = glGetUniformLocation(m_programID, "offset");
+	if (m_axisIndex == -1) {
+		std::cerr << "Error: Could not get offset atribute" << std::endl;
 		succesful = false;
 	}
 
-	m_offsetIndex = glGetUniformLocation(m_programID, "offset");
-	if (m_offsetIndex == -1) {
-		std::cerr << "Error: Could not get offset atribute" << std::endl;
+	m_axisIndex = glGetUniformLocation(m_programID, "axis");
+	if (m_axisIndex == -1) {
+		std::cerr << "Error: Could not get axis atribute" << std::endl;
 		succesful = false;
 	}
 
 	const GLfloat vertices[8] = {
 		//2 triangles forming a rectangle, 3 vertices per triangle, 2 floats per vertex = 8 floats in total
-		0.f, 1.f,  // Top left
-		0.f, 0.f,  // Bottom left
-		1.f, 1.f,  // Top right
-		1.f, 0.f,  // Bottom right
+		-0.5f,  0.5f,  // Top left
+		-0.5f, -0.5f,  // Bottom left
+		 0.5f,  0.5f,  // Top right
+		 0.5f, -0.5f,  // Bottom right
 	};
 
 	//create a handle to the buffer
@@ -125,3 +125,6 @@ bool DefaultImageVariables::Initialize()
 
 	return m_initialized = succesful;
 }
+
+//Destroy shader program
+//glDeleteProgram(s_programID);

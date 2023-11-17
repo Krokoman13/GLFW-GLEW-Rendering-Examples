@@ -6,7 +6,7 @@
 #include <iostream>
 #include <memory>
 
-#include "graphics/Image.hpp"
+#include "graphics/Sprite.hpp"
 #include "graphics/window/Window.hpp"
 
 int main()
@@ -14,24 +14,23 @@ int main()
 	Window window("Rendering Texture", 640, 480);
 
 	ResourceCache<Texture> textureCache;
-	Image::pTextureCache = &textureCache;
+	Sprite::pTextureCache = &textureCache;
 
 	//==============
 	
 	//Image* bigImage = new Image("textures/veryBig.jpg");
 	//bigImage->Load();
 
-	Image* brickImage = new Image("textures/bricks.jpg");
+	Sprite* brickImage = new Sprite("textures/bricks.jpg");
 	brickImage->Load();
+	brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
+	//brickImage->SetLocalRotation(Vec2::Deg2Rad(45));
 
-	Image* winImage = new Image("textures/windowsImage.jpg");
+	Sprite* winImage = new Sprite("textures/windowsImage.jpg");
 	winImage->SetFilterParam(GL_NEAREST, GL_NEAREST);
 	winImage->Load();
 
-	winImage->xScale = 1.f;
-	winImage->yScale = 1.f;
-	winImage->x = -1.f;
-	winImage->y = -1.f;
+	winImage->SetLocalPosition(-1.f, -1.f);
 
 	//==============
 
@@ -39,8 +38,9 @@ int main()
 	while (window.IsOpen())
 	{
 		//Update loop
-		window.Draw(winImage);
+		//window.Draw(winImage);
 		window.Draw(brickImage);
+		brickImage->identity.Rotate(0.01f);
 
 		window.Display();
 	}

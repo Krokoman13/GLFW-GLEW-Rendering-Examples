@@ -60,7 +60,7 @@ public:
 		const std::string string = argsToString(args...);
 
 		// Check if the resource is already cached
-		auto it = m_resourceMap.find(stringView);
+		auto it = m_resourceMap.find(string);
 		if (it != m_resourceMap.end()) {
 			std::cout << "Resource already mapped, returning cached resource!" << std::endl;
 			return m_resources[it->second];
@@ -68,7 +68,7 @@ public:
 
 		std::cout << "Resource not yet mapped, resource will be mapped" << std::endl;
 
-		const unsigned int index = addNewResouce(stringView, args...);
+		const unsigned int index = addNewResouce(string, args...);
 
 		return m_resources[index];
 	};

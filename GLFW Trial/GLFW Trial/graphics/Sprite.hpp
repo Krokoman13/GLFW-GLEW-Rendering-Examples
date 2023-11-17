@@ -4,33 +4,28 @@
 
 #include "../ResourceCache.hpp"
 
-class Image : public Renderable
+class Sprite : public Renderable
 {
 public:
-	Image(const char* pFilePath);
-	virtual ~Image();
+	Sprite(const char* pFilePath);
+	virtual ~Sprite();
 
 public:
 	static ResourceCache<Texture>* pTextureCache;
-
-	float x = 0.f;
-	float y = 0.f;
-
-	float xScale = 1.f;
-	float yScale = 1.f;
 
 private:
 	const char* m_filepath;
 
 	Texture m_texture;
+	Transform m_textureTransform;
 
 	GLuint m_programID = -1;
 
 	GLint m_vertexIndex = -1;
 	GLint m_diffuseTextureIndex = -1;
 	GLint m_uvIndex = -1;
-	GLint m_offsetIndex = -1;
-	GLint m_scaleIndex = -1;
+	GLint m_projectionIndex = -1;
+	GLint m_identityMatrix = -1;
 
 	GLuint m_uvsBufferId = -1;
 	GLuint m_vertexBufferId = -1;
@@ -38,9 +33,11 @@ private:
 	GLint m_minFilterParam = -1;
 	GLint m_magFilterParam = -1;
 
+protected:
+	virtual void Display(const Matrix3& a_pojectionMatrix) override;
+
 public:
 	virtual bool Load();
-	virtual void Display();
 
 	void SetFilterParam(GLint a_minFilter, GLint a_magFilter);
 

@@ -6,7 +6,8 @@ void error_callback(int a_error, const char* a_description)
 	std::cerr << "GLFW Error, " << a_error << ": " << a_description << std::endl;
 }
 
-Window::Window(const char* a_title, unsigned int a_width, unsigned int a_height)
+Window::Window(const char* a_title, unsigned int a_width, unsigned int a_height): 
+	camera(a_width, a_height), m_width(a_width), m_height(a_height)
 {
 	//Initialize GLFW
 	if (!glfwInit())
@@ -75,7 +76,7 @@ void Window::Display(std::queue<Renderable*>& a_toRender)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	while (!a_toRender.empty()) {
-		a_toRender.front()->Display();
+		a_toRender.front()->Display(camera);
 		a_toRender.pop();
 	}
 
