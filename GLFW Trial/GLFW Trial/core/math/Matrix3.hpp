@@ -26,6 +26,5 @@ public:
 	void Rotate(const float pRadians);
 
 	Matrix3 operator=(const Matrix& other);
-	float* Data() const;
 };
 

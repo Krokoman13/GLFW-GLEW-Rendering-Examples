@@ -20,7 +20,7 @@ public:
 
 	Camera(const unsigned int a_width, const unsigned int a_height)
 	{
-		m_ortho.Scale(Vec2(2.f / float(a_width), 2.f / float(a_height)));
+		m_ortho.Scale(Vec2(2.f / float(a_width), -2.f / float(a_height)));
 		m_ortho.Translate(-Vec2(a_width / 2.f, a_height / 2.f));
 	}
 

@@ -24,13 +24,15 @@ int main()
 	Sprite* brickImage = new Sprite("textures/bricks.jpg");
 	brickImage->Load();
 	brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
-	//brickImage->SetLocalRotation(Vec2::Deg2Rad(45));
+	//brickImage->SetLocalPosition(Vec2(1, 1));
 
 	Sprite* winImage = new Sprite("textures/windowsImage.jpg");
 	winImage->SetFilterParam(GL_NEAREST, GL_NEAREST);
 	winImage->Load();
 
-	winImage->SetLocalPosition(-1.f, -1.f);
+	winImage->SetParent(brickImage);
+	winImage->SetLocalPosition(100, 100);
+	winImage->SetLocalScale(10.f);
 
 	//==============
 
@@ -38,9 +40,10 @@ int main()
 	while (window.IsOpen())
 	{
 		//Update loop
-		//window.Draw(winImage);
 		window.Draw(brickImage);
+		window.Draw(winImage);
 		brickImage->identity.Rotate(0.01f);
+		winImage->identity.Rotate(-0.01f);
 
 		window.Display();
 	}

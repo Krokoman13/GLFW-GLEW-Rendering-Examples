@@ -267,6 +267,18 @@ Matrix Matrix::operator=(const Matrix& a_other)
 	return *this;
 }
 
+bool Matrix::operator==(const Matrix& a_other)
+{
+	if (GetColumns() != a_other.GetColumns() || GetRows() != a_other.GetRows()) return false;
+
+	return m_elements == a_other.m_elements;
+}
+
+bool Matrix::operator!=(const Matrix& a_other)
+{
+	return !(*this == a_other);
+}
+
 std::string Matrix::ToString() const
 {
 	std::string outp;
@@ -302,19 +314,20 @@ Matrix operator*(const Matrix& left, const Matrix& right)
 
 	Matrix out(left.GetColumns(), right.GetRows());
 
-	for (unsigned int y = 0; y < out.GetRows(); y++)
+	for (int i = 0; i < left.GetColumns(); i++) 
 	{
-		for (unsigned int x = 0; x < out.GetColumns(); x++)
+		for (int j = 0; j < right.GetRows(); j++) 
 		{
 			float value = 0;
-			for (unsigned int i = 0; i < right.GetColumns(); i++)
+
+			for (int k = 0; k < right.GetColumns(); k++) 
 			{
-				float val1 = left.Get(x, i);
-				float val2 = right.Get(i, y);
-				value += val1 * val2;
+				value += right.Get(i,k) * left.Get(k,j);
 			}
-			out.Set(x,y, value);
+
+			out.Set(i, j, value);
 		}
+
 	}
 
 	return out;

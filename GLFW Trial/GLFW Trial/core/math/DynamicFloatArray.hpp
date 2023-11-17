@@ -19,6 +19,7 @@ public:
 	inline const float* Data() const { return m_pArray; };
 
 	DynamicFloatArray operator=(const DynamicFloatArray& a_other);
+	bool operator == (const DynamicFloatArray& a_other);
 	float& operator[](unsigned int a_value);
 	const float operator[](unsigned int a_value)const;
 };

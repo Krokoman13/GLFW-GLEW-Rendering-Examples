@@ -45,6 +45,18 @@ DynamicFloatArray DynamicFloatArray::operator=(const DynamicFloatArray& a_other)
 	return *this;
 }
 
+bool DynamicFloatArray::operator==(const DynamicFloatArray& a_other)
+{
+	if (m_size != a_other.m_size) return false;
+
+	for (unsigned int i = 0; i < m_size; i++)
+	{
+		if (m_pArray[i] != a_other.m_pArray[i]) return false;
+	}
+
+	return true;
+}
+
 float& DynamicFloatArray::operator[](unsigned int i)
 {
 	if (i > GetSize() - 1) throw std::out_of_range("Index is out of range");

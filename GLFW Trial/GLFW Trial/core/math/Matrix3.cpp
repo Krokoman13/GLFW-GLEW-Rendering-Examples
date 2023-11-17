@@ -14,7 +14,7 @@ Matrix3::Matrix3(const Matrix& pOther) : Matrix(3, 3)
 
 Vec2 Matrix3::GetPos() const
 {
-	return Vec2(Get(0,2), Get(1, 2));
+	return Vec2(Get(2, 0), Get(2, 1));
 }
 
 float Matrix3::GetXScale() const
@@ -46,8 +46,8 @@ float Matrix3::GetRotRad() const
 Matrix3 Matrix3::TranslateMatrix(const Vec2& pPos)
 {
 	Matrix3 out;
-	out.Set(0, 2, pPos.x);
-	out.Set(1, 2, pPos.y);
+	out.Set(2, 0, pPos.x);
+	out.Set(2, 1, pPos.y);
 	return out;
 }
 
@@ -75,9 +75,14 @@ Matrix3 Matrix3::RotationMatrix(const Vec2& pRotVector)
 	return out;
 }
 
-Matrix3 Matrix3::RotationMatrix(float pRadians)
+Matrix3 Matrix3::RotationMatrix(float a_radians)
 {
-	return RotationMatrix(Vec2::GetUnitVectorRad(pRadians));
+	Matrix3 out;
+	out.Set(0, 0, cos(a_radians));
+	out.Set(1, 0, sin(a_radians));
+	out.Set(0, 1, -sin(a_radians));
+	out.Set(1, 1, cos(a_radians));
+	return out;
 }
 
 void Matrix3::Translate(const Vec2& pPos)
@@ -108,16 +113,4 @@ Matrix3 Matrix3::operator=(const Matrix& pOther)
 	}
 
 	return *this;
-}
-
-float* Matrix3::Data() const
-{
-	float outp[] =
-	{
-		Get(0, 0), Get(1, 0), Get(1, 0),
-		Get(0, 1), Get(1, 1), Get(1, 1),
-		Get(0, 2), Get(1, 2), Get(1, 2)
-	};
-
-	return outp;
 }
