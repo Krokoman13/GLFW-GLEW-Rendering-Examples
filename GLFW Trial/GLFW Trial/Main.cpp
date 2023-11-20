@@ -8,9 +8,14 @@
 
 #include "graphics/Sprite.hpp"
 #include "graphics/window/Window.hpp"
+#include "resourceManager/ResourceManager.hpp"
+#include "resources/resourceIndex.hpp"
 
 int main()
 {
+	//ResourceManager::Reset();
+	ResourceManager::Run();
+
 	Window window("Rendering Texture", 640, 480);
 
 	ResourceCache<Texture> textureCache;
@@ -21,12 +26,12 @@ int main()
 	//Image* bigImage = new Image("textures/veryBig.jpg");
 	//bigImage->Load();
 
-	Sprite* brickImage = new Sprite("textures/bricks.jpg");
+	Sprite* brickImage = new Sprite(RS__BRICKS_JPG);
 	brickImage->Load();
 	brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
 	//brickImage->SetLocalPosition(Vec2(1, 1));
 
-	Sprite* winImage = new Sprite("textures/windowsImage.jpg");
+	Sprite* winImage = new Sprite(RS__WINDOWSIMAGE_JPG);
 	winImage->SetFilterParam(GL_NEAREST, GL_NEAREST);
 	winImage->Load();
 
