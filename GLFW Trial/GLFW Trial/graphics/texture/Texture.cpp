@@ -15,12 +15,15 @@ const unsigned char Texture::nullPixelData[14] = {
 	0, 0, 0  // Black pixel
 };
 
+GLint Texture::defMinFilter = GL_LINEAR;
+GLint Texture::defMagFilter = GL_LINEAR;
+
 Texture::Texture() : m_id()
 {
 
 }
 
-Texture::Texture(std::string_view a_filePath, GLint a_minFilterParam, GLint a_magFilterParam) : m_id()
+Texture::Texture(std::string_view a_filePath) : m_id()
 {
 	int nrChannels = 0;
 	unsigned char* data = stbi_load(a_filePath.data(), &m_width, &m_height, &nrChannels, 4);
@@ -28,7 +31,7 @@ Texture::Texture(std::string_view a_filePath, GLint a_minFilterParam, GLint a_ma
 	if (data)
 	{
 		std::cout << "Texure: " << a_filePath << " loaded succesfully" << std::endl;
-		initTexture(data, m_width, m_height, a_minFilterParam, a_magFilterParam);
+		initTexture(data, m_width, m_height, defMagFilter, defMinFilter);
 		stbi_image_free(data);
 		m_succesfullLoadedFromFile = true;
 	}

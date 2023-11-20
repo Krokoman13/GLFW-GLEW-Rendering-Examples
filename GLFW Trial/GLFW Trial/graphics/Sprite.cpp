@@ -5,7 +5,7 @@
 
 ResourceCache<Texture>* Sprite::pTextureCache = nullptr;
 
-Sprite::Sprite(const char* pFilePath) : Renderable(0, 0), m_filepath(pFilePath)
+Sprite::Sprite(const unsigned int a_resourceID) : Renderable(0, 0), m_resourceID(a_resourceID)
 {
 	m_textureTransform.SetParent(this);
 }
@@ -15,16 +15,24 @@ Sprite::~Sprite()
 
 }
 
-
 bool Sprite::Load()
 {
 	bool succesful = true;
 
 	if (m_minFilterParam < 0) m_minFilterParam = DefaultSpriteVariables::minFilterParam;
 	if (m_magFilterParam < 0) m_magFilterParam = DefaultSpriteVariables::magFilterParam;
+	
+	GLint prevMinfilter = Texture::defMinFilter;
+	GLint prevMagfilter = Texture::defMagFilter;
 
-	if (pTextureCache) m_texture = pTextureCache->Get(m_filepath, m_minFilterParam, m_magFilterParam);
-	else m_texture = Texture(m_filepath, m_minFilterParam, m_magFilterParam);
+	Texture::defMinFilter = m_minFilterParam;
+	Texture::defMagFilter = m_magFilterParam;
+
+	if (pTextureCache) m_texture = pTextureCache->Get(m_resourceID);
+	//else m_texture = Texture(m_filepath, m_minFilterParam, m_magFilterParam);
+
+	Texture::defMinFilter = prevMinfilter;
+	Texture::defMagFilter = prevMagfilter;
 
 	Vec2 textureSize = Vec2(float(m_texture.GetWidth()), float(m_texture.GetHeight()));
 	m_textureTransform.SetLocalScale(textureSize);

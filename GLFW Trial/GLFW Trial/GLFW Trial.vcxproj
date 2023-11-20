@@ -152,6 +152,7 @@
     <ClCompile Include="graphics\texture\Texture.cpp" />
     <ClCompile Include="graphics\window\Window.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="resourceManager\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\math\DynamicFloatArray.hpp" />
@@ -167,6 +168,8 @@
     <ClInclude Include="graphics\window\Renderable.hpp" />
     <ClInclude Include="graphics\window\Window.hpp" />
     <ClInclude Include="ResourceCache.hpp" />
+    <ClInclude Include="resourceManager\ResourceManager.hpp" />
+    <ClInclude Include="Resources\resourceIndex.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -13,7 +13,7 @@
 
 int main()
 {
-	//ResourceManager::Reset();
+	ResourceManager::Reset();
 	ResourceManager::Run();
 
 	Window window("Rendering Texture", 640, 480);

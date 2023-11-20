@@ -22,8 +22,11 @@ protected:
 
 public:
 	Texture();
-	Texture(std::string_view a_filePath, GLint a_minFilterParam, GLint a_magFilterParam);
+	Texture(std::string_view a_filePath);
 	Texture(const Texture& a_other);
+
+	static GLint defMinFilter;
+	static GLint defMagFilter;
 
 	static bool NeedsMipmaps(GLint a_param);
 

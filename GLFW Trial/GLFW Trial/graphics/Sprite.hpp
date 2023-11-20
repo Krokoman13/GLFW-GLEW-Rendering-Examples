@@ -7,14 +7,14 @@
 class Sprite : public Renderable
 {
 public:
-	Sprite(const char* pFilePath);
+	Sprite(const unsigned int a_resourceID);
 	virtual ~Sprite();
 
 public:
 	static ResourceCache<Texture>* pTextureCache;
 
 private:
-	const char* m_filepath;
+	const unsigned int m_resourceID;
 
 	Texture m_texture;
 	Transform m_textureTransform;
