@@ -147,11 +147,14 @@
     <ClCompile Include="core\math\Vec2.cpp" />
     <ClCompile Include="core\Transform.cpp" />
     <ClCompile Include="graphics\DefaultImageVariables.cpp" />
-    <ClCompile Include="graphics\Sprite.cpp" />
+    <ClCompile Include="graphics\sprite\Sprite.cpp" />
     <ClCompile Include="graphics\loaders\ShaderUtil.cpp" />
+    <ClCompile Include="graphics\sprite\TextureShader.cpp" />
     <ClCompile Include="graphics\texture\Texture.cpp" />
     <ClCompile Include="graphics\window\Window.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="graphics\shader\Shader.cpp" />
+    <ClCompile Include="resourceManager\PathManager.cpp" />
     <ClCompile Include="resourceManager\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -160,16 +163,19 @@
     <ClInclude Include="core\math\Matrix3.hpp" />
     <ClInclude Include="core\math\Vec2.hpp" />
     <ClInclude Include="core\Transform.hpp" />
-    <ClInclude Include="Counted.hpp" />
+    <ClInclude Include="core\counted\Counted.hpp" />
     <ClInclude Include="graphics\DefaultImageVariables.hpp" />
-    <ClInclude Include="graphics\Sprite.hpp" />
-    <ClInclude Include="graphics\loaders\ShaderUtil.h" />
+    <ClInclude Include="graphics\sprite\Sprite.hpp" />
+    <ClInclude Include="graphics\loaders\ShaderUtil.hpp" />
     <ClInclude Include="graphics\texture\Texture.hpp" />
     <ClInclude Include="graphics\window\Renderable.hpp" />
     <ClInclude Include="graphics\window\Window.hpp" />
-    <ClInclude Include="ResourceCache.hpp" />
+    <ClInclude Include="resourceManager\PathManager.hpp" />
+    <ClInclude Include="resourceManager\ResourceCache.hpp" />
     <ClInclude Include="resourceManager\ResourceManager.hpp" />
-    <ClInclude Include="Resources\resourceIndex.hpp" />
+    <ClInclude Include="Resources\fileIndex.hpp" />
+    <ClInclude Include="graphics\shader\Shader.hpp" />
+    <ClInclude Include="graphics\sprite\TextureShader.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

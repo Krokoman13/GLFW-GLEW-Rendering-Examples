@@ -1,9 +1,10 @@
 #include "Sprite.hpp"
 #include <iostream>
-#include "loaders/ShaderUtil.h"
-#include "DefaultImageVariables.hpp"
+#include <gl/glew.h>
 
-ResourceCache<Texture>* Sprite::pTextureCache = nullptr;
+#include "../../resourceManager/ResourceManager.hpp"
+
+#include "../../Resources/fileIndex.hpp"
 
 Sprite::Sprite(const unsigned int a_resourceID) : Renderable(0, 0), m_resourceID(a_resourceID)
 {
@@ -19,8 +20,8 @@ bool Sprite::Load()
 {
 	bool succesful = true;
 
-	if (m_minFilterParam < 0) m_minFilterParam = DefaultSpriteVariables::minFilterParam;
-	if (m_magFilterParam < 0) m_magFilterParam = DefaultSpriteVariables::magFilterParam;
+	if (m_minFilterParam < 0) m_minFilterParam = Texture::defMinFilter;
+	if (m_magFilterParam < 0) m_magFilterParam = Texture::defMagFilter;
 	
 	GLint prevMinfilter = Texture::defMinFilter;
 	GLint prevMagfilter = Texture::defMagFilter;
@@ -28,8 +29,7 @@ bool Sprite::Load()
 	Texture::defMinFilter = m_minFilterParam;
 	Texture::defMagFilter = m_magFilterParam;
 
-	if (pTextureCache) m_texture = pTextureCache->Get(m_resourceID);
-	//else m_texture = Texture(m_filepath, m_minFilterParam, m_magFilterParam);
+	m_texture = ResourceManager::GetTexture(m_resourceID);
 
 	Texture::defMinFilter = prevMinfilter;
 	Texture::defMagFilter = prevMagfilter;
@@ -42,47 +42,10 @@ bool Sprite::Load()
 		succesful = false;
 	}
 
-	//if (!useDefaultImageVariables()) {
-	//	std::cerr << "Error: Could not use defaultImageVariables" << std::endl;
-	//	succesful = false;
-	//}
-
 	// Create the shader program
-	m_programID = ShaderUtil::createProgram("texture.vert", "texture.frag");
-	if (m_programID == -1) {
-		std::cerr << "Error: Could not create program" << std::endl;
-		succesful = false;
-	}
+	m_texShader = ResourceManager::GetShader(RS__TEXTURE_FRAG, RS__TEXTURE_VERT);
 
 	// get index for the attributes in the shader
-	m_vertexIndex = glGetAttribLocation(m_programID, "vertex");
-	if (m_vertexIndex == -1) {
-		std::cerr << "Error: Could not get vertex atribute" << std::endl;
-		succesful = false;
-	}
-
-	m_uvIndex = glGetAttribLocation(m_programID, "uv");
-	if (m_uvIndex == -1) {
-		std::cerr << "Error: Could not get uv atribute" << std::endl;
-		succesful = false;
-	}
-
-	m_projectionIndex = glGetUniformLocation(m_programID, "projection");
-	if (m_projectionIndex == -1) {
-		std::cerr << "Error: Could not get projection atribute" << std::endl;
-		succesful = false;
-	}
-
-	m_identityMatrix = glGetUniformLocation(m_programID, "identity");
-	if (m_identityMatrix == -1) {
-		std::cerr << "Error: Could not get identity atribute" << std::endl;
-		succesful = false;
-	}
-	m_diffuseTextureIndex = glGetUniformLocation(m_programID, "diffuseTexture");
-	if (m_diffuseTextureIndex == -1) {
-		std::cerr << "Error: Could not get diffuseTexure atribute" << std::endl;
-		succesful = false;
-	}
 
 	const GLfloat vertices[8] = {
 		//2 triangles forming a rectangle, 3 vertices per triangle, 2 floats per vertex = 8 floats in total
@@ -133,26 +96,6 @@ bool Sprite::Load()
 	return succesful;
 }
 
-bool Sprite::useDefaultImageVariables()
-{
-	bool succesful = DefaultSpriteVariables::Initialize();
-
-	m_programID = DefaultSpriteVariables::GetProgramID();
-
-	m_vertexIndex = DefaultSpriteVariables::GetVertexIndex();
-	m_uvIndex = DefaultSpriteVariables::GetUvIndex();
-
-	m_projectionIndex = DefaultSpriteVariables::GetOffsetIndex();
-	m_identityMatrix = DefaultSpriteVariables::GetAxisIndex();
-
-	m_diffuseTextureIndex = DefaultSpriteVariables::GetDiffuseTextureIndex();
-
-	m_uvsBufferId = DefaultSpriteVariables::GetUvsBufferId();
-	m_vertexBufferId = DefaultSpriteVariables::GetVertexBufferId();
-
-	return succesful;
-}
-
 void Sprite::SetFilterParam(GLint a_minFilter, GLint a_magFilter)
 {
 	if (Texture::NeedsMipmaps(a_magFilter))
@@ -169,42 +112,42 @@ void Sprite::SetFilterParam(GLint a_minFilter, GLint a_magFilter)
 void Sprite::Display(const Matrix3& a_pojectionMatrix)
 {
 	//tell the GPU to use this program
-	glUseProgram(m_programID);
+	glUseProgram(m_texShader.GetProgramID());
 
 	//Matrix3 thing = (Matrix3)(a_pojectionMatrix * m_textureTransform.GetGlobalMatrix());
-	glUniformMatrix3fv(m_identityMatrix, 1, GL_FALSE, m_textureTransform.GetGlobalMatrix().GetArray().Data());
-	glUniformMatrix3fv(m_projectionIndex, 1, GL_FALSE, a_pojectionMatrix.GetArray().Data());
+	glUniformMatrix3fv(m_texShader.GetIdenityMatrix(), 1, GL_FALSE, m_textureTransform.GetGlobalMatrix().GetArray().Data());
+	glUniformMatrix3fv(m_texShader.GetProjectionIndex(), 1, GL_FALSE, a_pojectionMatrix.GetArray().Data());
 
 	//tell OpenGL that the data for the vertexIndex is coming in from an array
-	glEnableVertexAttribArray(m_vertexIndex);
+	glEnableVertexAttribArray(m_texShader.GetVertexIndex());
 	//bind the buffer with data.
 	//the moment this buffer is bound instead of 0, the last param of glVertexAttribPointer
 	//is interpreted as an offset and not a pointer
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferId);
 	//send the data for this index to OpenGL, specifying it's format and structure
 	//vertexIndex // 3 bytes per element // floats // don't normalize // the data itself
-	glVertexAttribPointer(m_vertexIndex, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(m_texShader.GetVertexIndex(), 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	//tell OpenGL that the data for the vertexIndex/colorIndex is coming in from an array
-	glEnableVertexAttribArray(m_uvIndex);
+	glEnableVertexAttribArray(m_texShader.GetUvIndex());
 	//bind the buffer with data.
 	//the moment this buffer is bound instead of 0, the last param of glVertexAttribPointer
 	//is interpreted as an offset and not a pointer
 	glBindBuffer(GL_ARRAY_BUFFER, m_uvsBufferId);
 	//send the data for this index to OpenGL, specifying it's format and structure
 	//vertexIndex // 3 bytes per element // floats // don't normalize // the data itself
-	glVertexAttribPointer(m_uvIndex, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(m_texShader.GetUvIndex(), 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	//setup texture slot 0
 	glActiveTexture(GL_TEXTURE0);
 	//bind the texture to the current active slot
 	glBindTexture(GL_TEXTURE_2D, m_texture.GetId());
 	//tell the shader the texture slot for the diffuse texture is slot 0
-	glUniform1i(m_diffuseTextureIndex, 0);
+	glUniform1i(m_texShader.GetDiffuseTextureIndex(), 0);
 
 	//Draws elements from each enabled array using the specified mode (which is default for Unity etc as well)
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	glDisableVertexAttribArray(m_vertexIndex);
-	glDisableVertexAttribArray(m_uvIndex);
+	glDisableVertexAttribArray(m_texShader.GetVertexIndex());
+	glDisableVertexAttribArray(m_texShader.GetUvIndex());
 }

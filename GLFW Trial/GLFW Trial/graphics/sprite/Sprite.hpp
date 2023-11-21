@@ -1,8 +1,8 @@
 #pragma once
-#include "Texture/Texture.hpp"
-#include "window/Renderable.hpp"
+#include "../window/Renderable.hpp"
 
-#include "../ResourceCache.hpp"
+#include "../Texture/Texture.hpp"
+#include "TextureShader.hpp"
 
 class Sprite : public Renderable
 {
@@ -10,22 +10,13 @@ public:
 	Sprite(const unsigned int a_resourceID);
 	virtual ~Sprite();
 
-public:
-	static ResourceCache<Texture>* pTextureCache;
-
 private:
 	const unsigned int m_resourceID;
 
 	Texture m_texture;
 	Transform m_textureTransform;
 
-	GLuint m_programID = -1;
-
-	GLint m_vertexIndex = -1;
-	GLint m_diffuseTextureIndex = -1;
-	GLint m_uvIndex = -1;
-	GLint m_projectionIndex = -1;
-	GLint m_identityMatrix = -1;
+	TextureShader m_texShader;
 
 	GLuint m_uvsBufferId = -1;
 	GLuint m_vertexBufferId = -1;
@@ -40,7 +31,4 @@ public:
 	virtual bool Load();
 
 	void SetFilterParam(GLint a_minFilter, GLint a_magFilter);
-
-private:
-	bool useDefaultImageVariables();
 };

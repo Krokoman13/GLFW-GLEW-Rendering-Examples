@@ -6,20 +6,18 @@
 #include <iostream>
 #include <memory>
 
-#include "graphics/Sprite.hpp"
+#include "graphics/sprite/Sprite.hpp"
 #include "graphics/window/Window.hpp"
-#include "resourceManager/ResourceManager.hpp"
-#include "resources/resourceIndex.hpp"
+#include "resourceManager/PathManager.hpp"
+
+#include "Resources/fileIndex.hpp"
 
 int main()
 {
-	ResourceManager::Reset();
-	ResourceManager::Run();
+	PathManager::ResetPaths();
+	PathManager::MapPaths();
 
 	Window window("Rendering Texture", 640, 480);
-
-	ResourceCache<Texture> textureCache;
-	Sprite::pTextureCache = &textureCache;
 
 	//==============
 	

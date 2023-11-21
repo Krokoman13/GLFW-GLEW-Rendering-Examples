@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 #include <string_view>
 
-#include "../../Counted.hpp"
+#include "../../core/counted/Counted.hpp"
 
 class Texture : public Counted
 {

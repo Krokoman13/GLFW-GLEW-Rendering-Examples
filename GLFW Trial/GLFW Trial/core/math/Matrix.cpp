@@ -314,13 +314,13 @@ Matrix operator*(const Matrix& left, const Matrix& right)
 
 	Matrix out(left.GetColumns(), right.GetRows());
 
-	for (int i = 0; i < left.GetColumns(); i++) 
+	for (unsigned int i = 0; i < left.GetColumns(); i++) 
 	{
-		for (int j = 0; j < right.GetRows(); j++) 
+		for (unsigned int j = 0; j < right.GetRows(); j++) 
 		{
 			float value = 0;
 
-			for (int k = 0; k < right.GetColumns(); k++) 
+			for (unsigned int k = 0; k < right.GetColumns(); k++)
 			{
 				value += right.Get(i,k) * left.Get(k,j);
 			}

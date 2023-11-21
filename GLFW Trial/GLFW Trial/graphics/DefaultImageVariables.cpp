@@ -1,6 +1,6 @@
 #include "DefaultImageVariables.hpp"
 #include <iostream>
-#include "loaders/ShaderUtil.h"
+#include "loaders/ShaderUtil.hpp"
 
 bool DefaultSpriteVariables::m_initialized = false;
 
