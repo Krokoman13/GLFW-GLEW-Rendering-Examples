@@ -3,7 +3,7 @@
 #include <cstring>
 #include <sstream>
 
-const std::string PathManager::m_fileExtention = "resc";
+const std::string PathManager::m_fileExtention = ".resc";
 std::string PathManager::resourceIndexFilePath = "Resources";
 std::string PathManager::resourceIndexFileName = "fileIndex.hpp";
 std::unordered_map<unsigned int, std::string> PathManager::m_idPathMap;
@@ -18,7 +18,7 @@ void PathManager::ResetPaths()
 
         std::string filename = entry.path().filename().string();
 
-        if (filename.find('.' + m_fileExtention) == std::string::npos) continue;
+        if (entry.path().extension().string() != m_fileExtention) continue;
         std::remove(entry.path().string().data());
     }
 }
@@ -39,21 +39,48 @@ void PathManager::MapPaths()
 
     std::unordered_map<unsigned int, std::string> newConstants;
 
-
-    for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(resourceIndexFilePath)) {
+    for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(resourceIndexFilePath)) {    //Loop through all files in the Resources Folder
         if (!entry.is_regular_file()) continue;
 
         std::string filename = entry.path().filename().string();
         if (resourceIndexFileName == filename) continue;
 
-        if (filename.find('.' + m_fileExtention) == std::string::npos) {  //If it is NOT a meta file
-            std::string metaFilename = filename + '.' + m_fileExtention;
-            std::filesystem::path metaPath = entry.path().parent_path() / metaFilename;
-            if (std::filesystem::exists(metaPath)) continue;
+        if (entry.path().extension().string() == m_fileExtention) {  //If it is a resc file
 
-            std::ofstream metaFile(metaPath);
+            continue;
+        }
+        
+        //If it is NOT a resc file
+        std::string rescFileName = filename + m_fileExtention;
+        std::filesystem::path rescPath = entry.path().parent_path() / rescFileName;
+        
+        {
+            std::ifstream rescFile(rescPath);
 
-            if (!metaFile.is_open()) continue;
+            if (rescFile.good())    //If it already has a .resc file
+            {
+                std::pair<unsigned int, std::string> file = fromRescFile(rescFile);
+                m_idPathMap[file.first] = entry.path().string();
+
+                auto fileTag = oldConstants.find(file.first);
+                if (fileTag != oldConstants.end()) {
+                    newConstants[file.first] = fileTag->second;
+                    continue;
+                }
+
+                newConstants[file.first] = file.second;
+                m_idPathMap[file.first] = entry.path().string().substr(0, (m_fileExtention.size() + 1));
+                rescFile.close();
+                continue;
+            }
+
+            rescFile.close();
+        }
+
+        {
+            std::ofstream rescFile(rescPath);   //If it does not have a .resc file
+
+            if (!rescFile.good()) continue;
 
             unsigned int uniqueID = lowestUntaken;
             taken.push_back(uniqueID);
@@ -61,29 +88,12 @@ void PathManager::MapPaths()
 
             std::string constantName = toConstName(filename);
 
-            toMetaFile(metaFile, uniqueID, constantName);
-            metaFile.close();
+            toRescFile(rescFile, uniqueID, constantName);
+            rescFile.close();
 
             m_idPathMap[uniqueID] = entry.path().string();
             newConstants[uniqueID] = "#define " + constantName;
-
-            continue;
         }
-        
-        //if it is a meta file
-        std::ifstream metaFile(entry.path());
-
-        std::pair<unsigned int, std::string> file = fromMetaFile(metaFile);
-        m_idPathMap[file.first] = entry.path().string();
-
-        auto fileTag = oldConstants.find(file.first);
-        if (fileTag != oldConstants.end()) {
-            newConstants[file.first] = fileTag->second;
-            continue;
-        }
-
-        newConstants[file.first] = file.second;
-        m_idPathMap[file.first] = entry.path().string().substr(0, (m_fileExtention.size() + 2));
     }
 
     std::ofstream resourceIndex(resourceIndexFilePath + '/' + resourceIndexFileName);
@@ -125,7 +135,7 @@ void PathManager::getResourceIndex(std::unordered_map<unsigned int, std::string>
     ifs.close();
 }
 
-std::pair<unsigned int, std::string> PathManager::fromMetaFile(std::istream& a_metaFile)
+std::pair<unsigned int, std::string> PathManager::fromRescFile(std::istream& a_metaFile)
 {
     std::string firstLine;
     std::getline(a_metaFile, firstLine);
@@ -138,7 +148,12 @@ std::pair<unsigned int, std::string> PathManager::fromMetaFile(std::istream& a_m
     return std::pair<unsigned int, std::string>(id, secondLIne);
 }
 
-void PathManager::toMetaFile(std::ostream& a_metaFile, const unsigned int a_id, std::string_view a_constName)
+std::pair<unsigned int, std::string> PathManager::createRescFile(std::filesystem::path)
+{
+    return std::pair<unsigned int, std::string>();
+}
+
+void PathManager::toRescFile(std::ostream& a_metaFile, const unsigned int a_id, std::string_view a_constName)
 {
     a_metaFile << a_id << std::endl;
     a_metaFile << a_constName << std::endl;

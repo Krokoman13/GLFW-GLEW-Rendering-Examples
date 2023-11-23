@@ -22,8 +22,9 @@ private:
 	static const std::string m_fileExtention;
 
 	static void getResourceIndex(std::unordered_map<unsigned int, std::string>& a_uMap);
-	static std::pair<unsigned int, std::string> fromMetaFile(std::istream& a_metaFile);
-	static void toMetaFile(std::ostream& a_metaFile, const unsigned int a_id, std::string_view a_constName);
+	static std::pair<unsigned int, std::string> fromRescFile(std::istream& a_metaFile);
+	static std::pair<unsigned int, std::string> createRescFile(std::filesystem::path a_resourceFilePath);
+	static void toRescFile(std::ostream& a_metaFile, const unsigned int a_id, std::string_view a_constName);
 	static unsigned int findLowestUntaken(const std::vector<unsigned int>& a_takenSorted, unsigned int a_potentialUntaken = 0);
 	static std::string toConstName(std::string_view a_fileName);
 };
