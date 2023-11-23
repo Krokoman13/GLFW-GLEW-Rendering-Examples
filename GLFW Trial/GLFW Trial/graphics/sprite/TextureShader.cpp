@@ -25,16 +25,16 @@ void TextureShader::setIndexes()
 
 	m_diffuseTextureIndex = GetUniform("diffuseTexture");
 	if (m_diffuseTextureIndex == -1) {
-		std::cerr << "Error: Could not get diffuseTexure atribute" << std::endl;
+		std::cerr << "Error: Could not get diffuseTexure uniform" << std::endl;
 	}
 
-	m_diffuseTextureIndex = GetUniform("diffuseTexture");
+	m_projectionIndex = GetUniform("projection");
 	if (m_diffuseTextureIndex == -1) {
-		std::cerr << "Error: Could not get diffuseTexure atribute" << std::endl;
+		std::cerr << "Error: Could not get projection uniform" << std::endl;
 	}
 
 	m_identityMatrix = GetUniform("identity");
 	if (m_identityMatrix == -1) {
-		std::cerr << "Error: Could not get identity atribute" << std::endl;
+		std::cerr << "Error: Could not get identity uniform" << std::endl;
 	}
 }

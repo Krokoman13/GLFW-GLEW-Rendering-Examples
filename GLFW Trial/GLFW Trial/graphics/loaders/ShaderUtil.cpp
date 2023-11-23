@@ -38,7 +38,7 @@ GLuint ShaderUtil::createProgram (const std::string& a_vertexShaderPath, const s
 
     //after the program has been compiled and linked we can release the individual shaders
     for (size_t i = 0; i < shaders.size(); i++) {
-        glDeleteShader (shaders[i]);
+        glDeleteShader(shaders[i]);
     }
 
     return program;
@@ -102,6 +102,7 @@ GLuint ShaderUtil::loadShader (const std::string& pShaderPath, GLenum pShaderTyp
     }
 
     std::cout << "Shader compilation successful." << std::endl << std::endl;
+    return shaderHandle;
 }
 
 /**
@@ -113,27 +114,28 @@ GLuint ShaderUtil::compileAndLinkProgram (const std::vector<GLuint> &pShaders) {
     std::cout << "Program id:" << program << std::endl;
     for (size_t i = 0; i < pShaders.size(); i++) {
         std::cout << "   Attaching shader " << pShaders[i] << std::endl;
-        glAttachShader (program, pShaders[i]);
+        glAttachShader(program, pShaders[i]);
     }
     std::cout << "Linking program..." << std::endl;
-    glLinkProgram (program);
+    glLinkProgram(program);
 
     int linkStatus = 0;
-    glGetProgramiv (program, GL_LINK_STATUS, &linkStatus);
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
 
     if (linkStatus == GL_FALSE) {
         std::cout << "Linking failed... " << std::endl;
 
         int linkLogSize = 0;
-        glGetProgramiv (program, GL_INFO_LOG_LENGTH, &linkLogSize);
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &linkLogSize);
 
         GLchar* linkLog = new GLchar[linkLogSize];
-        glGetProgramInfoLog (program, linkLogSize, NULL, linkLog);
+        glGetProgramInfoLog(program, linkLogSize, NULL, linkLog);
         std::cout << linkLog << std::endl;
-        delete [] linkLog;
+        delete[] linkLog;
         return 0;
 
-    } else {
+    }
+    else {
         std::cout << "Link successful." << std::endl;
     }
 
@@ -141,7 +143,7 @@ GLuint ShaderUtil::compileAndLinkProgram (const std::vector<GLuint> &pShaders) {
 
     //detach the shaders again (we have a binary linked program now)
     for (size_t i = 0; i < pShaders.size(); i++) {
-        glDetachShader (program, pShaders[i]);
+        glDetachShader(program, pShaders[i]);
     }
 
     return program;
