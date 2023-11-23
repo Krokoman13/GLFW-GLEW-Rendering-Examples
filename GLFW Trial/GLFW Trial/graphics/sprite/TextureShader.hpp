@@ -14,7 +14,6 @@ private:
 public:
 	TextureShader() {};
 	TextureShader(const Shader& a_other);
-	TextureShader operator=(const Shader& a_other);
 
 private:
 	void setIndexes();

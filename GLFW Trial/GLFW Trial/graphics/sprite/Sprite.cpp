@@ -3,8 +3,10 @@
 #include <gl/glew.h>
 
 #include "../../resourceManager/ResourceManager.hpp"
-
 #include "../../Resources/fileIndex.hpp"
+
+#include "../loaders/ShaderUtil.hpp"
+#include "../../resourceManager/PathManager.hpp"
 
 Sprite::Sprite(const unsigned int a_resourceID) : Renderable(0, 0), m_resourceID(a_resourceID)
 {
@@ -43,7 +45,8 @@ bool Sprite::Load()
 	}
 
 	// Create the shader program
-	m_texShader = ResourceManager::GetShader(RS__TEXTURE_FRAG, RS__TEXTURE_VERT);
+	Shader shader = Shader(ShaderUtil::createProgram(PathManager::GetFilePath(RS__TEXTURE_VERT), PathManager::GetFilePath(RS__TEXTURE_FRAG)));
+	m_texShader = shader;
 
 	// get index for the attributes in the shader
 

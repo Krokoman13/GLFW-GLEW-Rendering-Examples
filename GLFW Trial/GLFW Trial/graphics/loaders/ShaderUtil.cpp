@@ -20,7 +20,7 @@ GLuint ShaderUtil::createProgram(const std::string& a_vertex_fragment_Shaderpath
     return createProgram(vertexPath, fragmentPath);
 }
 
-GLuint ShaderUtil::createProgram (std::string_view a_vertexShaderPath, std::string_view a_fragmentShaderPath)
+GLuint ShaderUtil::createProgram (const std::string& a_vertexShaderPath, const std::string& a_fragmentShaderPath)
 {
     GLuint vertexShader = loadShader(a_vertexShaderPath, GL_VERTEX_SHADER);
     GLuint fragmentShader = loadShader(a_fragmentShaderPath, GL_FRAGMENT_SHADER);
@@ -45,63 +45,63 @@ GLuint ShaderUtil::createProgram (std::string_view a_vertexShaderPath, std::stri
 }
 
 
-GLuint ShaderUtil::loadShader (std::string_view pShaderPath, GLenum pShaderType) {
+GLuint ShaderUtil::loadShader (const std::string& pShaderPath, GLenum pShaderType) {
     std::cout << "-----------------------------------" << std::endl;
     std::cout << "Loading file " << pShaderPath << ":" << std::endl << std::endl;
 
     //open the source path
-    std::ifstream sourceFile (pShaderPath.data());
+    std::ifstream sourceFile(pShaderPath.c_str());
     if (!sourceFile) {
         std::cout << "Could not read shader file <" << pShaderPath << ">";
         std::cout << "-----------------------------------" << std::endl;
-        return -1;
+        return 0;
     }
 
     //read the whole file into a stream
     std::stringstream buffer;
     buffer << sourceFile.rdbuf();
     sourceFile.close();
-	
+
     //dump source on the output stream so we can see it
     std::string source = buffer.str();
-    //std::cout << source;
-    //std::cout << "-----------------------------------" << std::endl;
+    std::cout << source;
+    std::cout << "-----------------------------------" << std::endl;
 
     //create a shader and test successful creation
     std::cout << "Creating shader object..." << std::endl;
     GLuint shaderHandle = glCreateShader(pShaderType);
-    std::cout << "Shader creation successful? " << (shaderHandle != 0?"Yes":"No") << std::endl;
+    std::cout << "Shader creation successful? " << (shaderHandle != 0 ? "Yes" : "No") << std::endl;
     if (shaderHandle == 0) return 0;
 
     //load sourcePointer (which is one string) into shaderHandle, and since its null terminated we can
     //pass in NULL for the length array
     std::cout << "Loading source into shader..." << std::endl;
-    char const * sourcePointer = source.c_str();
-    glShaderSource (shaderHandle, 1, &sourcePointer, NULL);
+    char const* sourcePointer = source.c_str();
+    glShaderSource(shaderHandle, 1, &sourcePointer, NULL);
 
     //compile and check compilation status
     std::cout << "Compiling shader..." << std::endl;
-    glCompileShader (shaderHandle);
+    glCompileShader(shaderHandle);
     GLint compileStatus = 0;
-    glGetShaderiv (shaderHandle, GL_COMPILE_STATUS, &compileStatus);
+    glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &compileStatus);
     if (compileStatus == GL_FALSE) {
         std::cout << "Shader compilation failed:" << std::endl;
 
         GLint logLength = 0;
-        glGetShaderiv (shaderHandle, GL_INFO_LOG_LENGTH, &logLength);
+        glGetShaderiv(shaderHandle, GL_INFO_LOG_LENGTH, &logLength);
         if (logLength > 0) {
             GLchar* errorLog = new GLchar[logLength];
-            glGetShaderInfoLog (shaderHandle, logLength, NULL, errorLog);
+            glGetShaderInfoLog(shaderHandle, logLength, NULL, errorLog);
             std::cout << errorLog << std::endl;
-            delete [] errorLog;
-        } else {
+            delete[] errorLog;
+        }
+        else {
             std::cout << "No info available." << std::endl;
         }
         return 0;
     }
 
     std::cout << "Shader compilation successful." << std::endl << std::endl;
-    return shaderHandle;
 }
 
 /**

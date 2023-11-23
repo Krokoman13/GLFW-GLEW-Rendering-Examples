@@ -14,7 +14,7 @@
 
 int main()
 {
-	//PathManager::ResetPaths();
+	PathManager::ResetPaths();
 	PathManager::MapPaths();
 
 	Window window("Rendering Texture", 640, 480);

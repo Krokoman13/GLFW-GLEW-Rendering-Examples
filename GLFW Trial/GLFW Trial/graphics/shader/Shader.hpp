@@ -10,6 +10,7 @@ protected:
 
 public:
 	Shader() {};
+	Shader(GLuint m_programID);
 	Shader(const std::string& a_vertex_fragment_Shaderpath);
 	Shader(const Shader& a_other) : Counted(a_other), m_programID(a_other.m_programID) {};
 

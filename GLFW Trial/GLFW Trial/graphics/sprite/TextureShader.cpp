@@ -3,17 +3,10 @@
 
 #include "TextureShader.hpp"
 
-TextureShader::TextureShader(const Shader& a_other)
+TextureShader::TextureShader(const Shader& a_other) : Shader(a_other)
 {
 	if (a_other.GetProgramID() < 0) throw std::invalid_argument("Cannot convert unloaded texture");
 	if (!m_set) setIndexes();
-}
-
-TextureShader TextureShader::operator=(const Shader& a_other)
-{
-	if (a_other.GetProgramID() < 0) throw std::invalid_argument("Cannot convert unloaded texture");
-	if (!m_set) setIndexes();
-	return *this;
 }
 
 void TextureShader::setIndexes()
