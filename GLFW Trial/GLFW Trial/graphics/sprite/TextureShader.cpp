@@ -28,13 +28,8 @@ void TextureShader::setIndexes()
 		std::cerr << "Error: Could not get diffuseTexure uniform" << std::endl;
 	}
 
-	m_projectionIndex = GetUniform("projection");
+	m_MVPMatrixIndex = GetUniform("mvp");
 	if (m_diffuseTextureIndex == -1) {
-		std::cerr << "Error: Could not get projection uniform" << std::endl;
-	}
-
-	m_identityMatrix = GetUniform("identity");
-	if (m_identityMatrix == -1) {
-		std::cerr << "Error: Could not get identity uniform" << std::endl;
+		std::cerr << "Error: Could not get mvp uniform" << std::endl;
 	}
 }

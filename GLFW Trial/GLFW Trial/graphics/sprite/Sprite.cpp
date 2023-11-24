@@ -112,9 +112,10 @@ void Sprite::Display(const Matrix3& a_pojectionMatrix)
 	//tell the GPU to use this program
 	glUseProgram(m_texShader.GetProgramID());
 
+	Matrix modelView = a_pojectionMatrix * m_textureTransform.GetGlobalMatrix();
+
 	//Matrix3 thing = (Matrix3)(a_pojectionMatrix * m_textureTransform.GetGlobalMatrix());
-	glUniformMatrix3fv(m_texShader.GetIdenityMatrix(), 1, GL_FALSE, m_textureTransform.GetGlobalMatrix().GetArray().Data());
-	glUniformMatrix3fv(m_texShader.GetProjectionIndex(), 1, GL_FALSE, a_pojectionMatrix.GetArray().Data());
+	glUniformMatrix3fv(m_texShader.GetMVPMatrix(), 1, GL_FALSE, modelView.GetArray().Data());
 
 	//tell OpenGL that the data for the vertexIndex is coming in from an array
 	glEnableVertexAttribArray(m_texShader.GetVertexIndex());
