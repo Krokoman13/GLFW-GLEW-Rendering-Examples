@@ -24,18 +24,19 @@ int main()
 	//Image* bigImage = new Image("textures/veryBig.jpg");
 	//bigImage->Load();
 
-	Sprite* brickImage = new Sprite(RS__BRICKS_JPG);
-	brickImage->Load();
-	brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
-	//brickImage->SetLocalPosition(Vec2(1, 1));
-
 	Sprite* brickImage2 = new Sprite(RS__BRICKS_JPG);
 	brickImage2->Load();
 	brickImage2->SetLocalPosition(window.camera.GetSize() / 2.f);
+	delete brickImage2;
 
 	Sprite* winImage = new Sprite(RS__WINDOWSIMAGE_JPG);
 	winImage->SetFilterParam(GL_NEAREST, GL_NEAREST);
 	winImage->Load();
+
+	Sprite* brickImage = new Sprite(RS__BRICKS_JPG);
+	brickImage->Load();
+	brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
+	//brickImage->SetLocalPosition(Vec2(1, 1));
 
 	winImage->SetParent(brickImage);
 	winImage->SetLocalPosition(100, 100);

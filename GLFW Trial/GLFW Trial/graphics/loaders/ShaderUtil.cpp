@@ -64,8 +64,8 @@ GLuint ShaderUtil::loadShader (const std::string& pShaderPath, GLenum pShaderTyp
 
     //dump source on the output stream so we can see it
     std::string source = buffer.str();
-    std::cout << source;
-    std::cout << "-----------------------------------" << std::endl;
+    //std::cout << source;
+    //std::cout << "-----------------------------------" << std::endl;
 
     //create a shader and test successful creation
     std::cout << "Creating shader object..." << std::endl;

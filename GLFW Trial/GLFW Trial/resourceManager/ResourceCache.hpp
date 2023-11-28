@@ -55,7 +55,9 @@ private:
         else
         {
             std::cout << "Found a lonely Resouce, will be overwritten by a new one!" << std::endl;
+            const std::string& previous = findByValue(index);
             m_resources[index] = T(a_path);
+            m_resourceMap.erase(previous);
         }
 
         // Add the path and index to the resource map
@@ -80,4 +82,14 @@ private:
         // If no lonely resource is found, return the size of the resources vector
         return size;
     };
+
+    std::string findByValue(const unsigned int a_value)
+    {
+        for (auto it : m_resourceMap)
+        {
+            if (it.second == a_value) return it.first;
+        }
+
+        throw std::invalid_argument("Value was not found in resourceMap");
+    }
 };
