@@ -147,6 +147,7 @@
     <ClCompile Include="core\math\Vec2.cpp" />
     <ClCompile Include="core\Transform.cpp" />
     <ClCompile Include="graphics\DefaultImageVariables.cpp" />
+    <ClCompile Include="graphics\GLBuffer\GLBuffer.cpp" />
     <ClCompile Include="graphics\sprite\Sprite.cpp" />
     <ClCompile Include="graphics\loaders\ShaderUtil.cpp" />
     <ClCompile Include="graphics\sprite\TextureShader.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="core\Transform.hpp" />
     <ClInclude Include="core\counted\Counted.hpp" />
     <ClInclude Include="graphics\DefaultImageVariables.hpp" />
+    <ClInclude Include="graphics\GLBuffer\GLBuffer.hpp" />
     <ClInclude Include="graphics\sprite\Sprite.hpp" />
     <ClInclude Include="graphics\loaders\ShaderUtil.hpp" />
     <ClInclude Include="graphics\texture\Texture.hpp" />

@@ -18,17 +18,17 @@ private:
 
 	TextureShader m_texShader;
 
+	GLuint m_vertexBuffer = -1;
 	GLuint m_uvsBufferId = -1;
-	GLuint m_vertexBufferId = -1;
 
 	GLint m_minFilterParam = -1;
 	GLint m_magFilterParam = -1;
 
 protected:
 	virtual void Display(const Matrix3& a_pojectionMatrix) override;
+	bool loadTexture();
 
 public:
 	virtual bool Load();
-
 	void SetFilterParam(GLint a_minFilter, GLint a_magFilter);
 };
