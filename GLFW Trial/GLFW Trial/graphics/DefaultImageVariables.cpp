@@ -92,10 +92,10 @@ bool DefaultSpriteVariables::Initialize()
 		std::cerr << "glGenBuffers failed with error: " << err << std::endl;
 	}
 
-	//bind our buffer to the GL_ARRAY_BUFFER endpoint, since none was bound yet,
+	//bind the buffer to the GL_ARRAY_BUFFER endpoint, since none was bound yet,
 	//a new array buffer for vertex position data will be created
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferId);
-	//stream all our data to the array buffer endpoint to which our vertexPositionsBufferId is connected
+	//stream all the data to the array buffer endpoint to which the vertexPositionsBufferId is connected
 	//note that vertexPositionsBufferId is not mentioned, instead the ARRAY_BUFFER is set as the data "sink"
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	//disconnect the funnel
@@ -115,10 +115,10 @@ bool DefaultSpriteVariables::Initialize()
 	if (err != GL_NO_ERROR) {
 		std::cerr << "glGenBuffers failed with error: " << err << std::endl;
 	}
-	// bind our buffer to the GL_ARRAY_BUFFER endpoint, since none was bound yet,
+	// bind the buffer to the GL_ARRAY_BUFFER endpoint, since none was bound yet,
 	// a new array buffer for vertex position data will be created
 	glBindBuffer(GL_ARRAY_BUFFER, m_uvsBufferId);
-	// stream all our data to the array buffer endpoint to which our vertexPositionsBufferId is connected
+	// stream all the data to the array buffer endpoint to which the vertexPositionsBufferId is connected
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uvs), uvs, GL_STATIC_DRAW);
 	// disconnect the funnel
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

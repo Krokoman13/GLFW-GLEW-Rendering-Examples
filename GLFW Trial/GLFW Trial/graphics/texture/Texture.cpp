@@ -18,12 +18,12 @@ const unsigned char Texture::nullPixelData[14] = {
 GLint Texture::defMinFilter = GL_LINEAR;
 GLint Texture::defMagFilter = GL_LINEAR;
 
-Texture::Texture() : m_id()
+Texture::Texture()
 {
 
 }
 
-Texture::Texture(std::string_view a_filePath) : m_id()
+Texture::Texture(std::string_view a_filePath)
 {
 	int nrChannels = 0;
 	unsigned char* data = stbi_load(a_filePath.data(), &m_width, &m_height, &nrChannels, 4);
@@ -67,17 +67,49 @@ void Texture::initTexture(const unsigned char* a_data, int a_width, int a_height
 	if (err != GL_NO_ERROR) {
 		std::cerr << "glGenTextures failed with error: " << err << std::endl;
 	}
+
 	glBindTexture(GL_TEXTURE_2D, m_id);
+	err = glGetError();
+	if (err != GL_NO_ERROR) {
+		std::cerr << "glBindTexture failed with error: " << err << std::endl;
+	}
 
 	// set the texture wrapping/filtering options (on the currently bound texture object)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	err = glGetError();
+	if (err != GL_NO_ERROR) {
+		std::cerr << "glTexParameteri1 failed with error: " << err << std::endl;
+	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	err = glGetError();
+	if (err != GL_NO_ERROR) {
+		std::cerr << "glTexParameteri2 failed with error: " << err << std::endl;
+	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, a_minFilterParam);
+	err = glGetError();
+	if (err != GL_NO_ERROR) {
+		std::cerr << "glTexParameteri3 failed with error: " << err << std::endl;
+	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, a_magFilterParam);
+	err = glGetError();
+	if (err != GL_NO_ERROR) {
+		std::cerr << "glTexParameteri4 failed with error: " << err << std::endl;
+	}
 	// load and generate the texture
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, a_data);
-	if (NeedsMipmaps(a_minFilterParam)) glGenerateMipmap(GL_TEXTURE_2D);
+	err = glGetError();
+	if (err != GL_NO_ERROR) {
+		std::cerr << "glTexImage2D failed with error: " << err << std::endl;
+	}
+
+	if (!NeedsMipmaps(a_minFilterParam)) return;
+
+	glGenerateMipmap(GL_TEXTURE_2D);
+	err = glGetError();
+	if (err != GL_NO_ERROR) {
+		std::cerr << "glGenerateMipmap failed with error: " << err << std::endl;
+	}
 }
 
 bool Texture::NeedsMipmaps(GLint a_param)
@@ -91,5 +123,12 @@ bool Texture::NeedsMipmaps(GLint a_param)
 
 void Texture::onLastDestruction()
 {
+	if (m_id == 0) return;
+
 	glDeleteTextures(1, &m_id);
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) {
+		std::cerr << "glDeleteTextures failed with error: " << err << std::endl;
+	}
 }

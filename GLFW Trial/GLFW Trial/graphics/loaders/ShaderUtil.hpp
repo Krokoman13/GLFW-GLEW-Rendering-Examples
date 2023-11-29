@@ -13,5 +13,5 @@ class ShaderUtil
 
     private:
         static GLuint loadShader (const std::string& a_shaderPath, GLenum a_shaderType);
-        static GLuint compileAndLinkProgram (const std::vector<GLuint>& a_shaders);
+        static GLuint compileAndLinkProgram (const GLuint a_vertexShaderHandle, const GLuint a_fragmentShaderHandle);
 };

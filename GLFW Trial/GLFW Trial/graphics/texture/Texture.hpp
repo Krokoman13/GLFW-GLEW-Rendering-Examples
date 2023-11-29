@@ -13,7 +13,7 @@ private:
 
 protected:
 	//OpenGL id for texture buffer
-	unsigned int m_id;
+	GLuint m_id = 0;
 
 	bool m_succesfullLoadedFromFile = false;
 	int m_width = 0, m_height = 0;
