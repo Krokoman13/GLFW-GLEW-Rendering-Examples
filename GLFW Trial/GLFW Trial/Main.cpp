@@ -8,7 +8,10 @@
 
 #include "graphics/sprite/Sprite.hpp"
 #include "graphics/window/Window.hpp"
+
 #include "resourceManager/PathManager.hpp"
+#include "resourceManager/ResourceCache.hpp"
+#include "resourceManager/ResourceManager.hpp"
 
 #include "Resources/fileIndex.hpp"
 
@@ -17,17 +20,14 @@ int main()
 	//PathManager::ResetPaths();
 	PathManager::MapPaths();
 
+	ResourceCache<Texture> texureCache;
+	ResourceCache<Shader> shaderCache;
+	ResourceManager::pTexureCache = &texureCache;
+	ResourceManager::pShaderCache = &shaderCache;
+
 	Window window("Rendering Texture", 640, 480);
 
 	//==============
-	
-	//Image* bigImage = new Image("textures/veryBig.jpg");
-	//bigImage->Load();
-
-	Sprite* brickImage2 = new Sprite(RS__BRICKS_JPG);
-	brickImage2->Load();
-	brickImage2->SetLocalPosition(window.camera.GetSize() / 2.f);
-	delete brickImage2;
 
 	Sprite* winImage = new Sprite(RS__WINDOWSIMAGE_JPG);
 	winImage->SetFilterParam(GL_NEAREST, GL_NEAREST);
@@ -58,6 +58,9 @@ int main()
 
 	delete brickImage;
 	delete winImage;
+
+	texureCache.Clear();
+	shaderCache.Clear();
 
 	return 0;
 }

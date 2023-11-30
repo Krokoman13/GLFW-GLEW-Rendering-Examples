@@ -18,6 +18,8 @@ private:
     std::vector<T> m_resources;
 
 public:
+    ~ResourceCache() { Clear(); }
+
     // Either finds and returns an existing resource or create and adds a new one
     T Get(const std::string& a_path)
     {
@@ -25,7 +27,6 @@ public:
         auto it = m_resourceMap.find(a_path);
         if (it != m_resourceMap.end()) {
             std::cout << "Resource " << a_path << " already mapped, returning cached resource!" << std::endl;
-            // If the resource is cached, return it
             return get(it->second);
         }
 
@@ -37,6 +38,19 @@ public:
         return get(index);
     };
 
+    // Clears the cache of all current resources
+    void Clear()
+    {
+        while (!m_resources.empty()) {
+            if (!m_resources.back().LastCopy())
+                std::cerr << "Warning: resource in cache is NOT the last resource, this means it cannot be cleaned up propperly" << std::endl;
+
+            m_resources.pop_back();
+        }
+
+        m_resourceMap.clear();
+    }
+
 private:
     // A private method to get a resource by its index
     inline T& get(const unsigned int a_index) { return m_resources[a_index]; };
@@ -46,7 +60,7 @@ private:
         // Try to find a lonely resource to overwrite
         const unsigned int index = findLonely();
 
-        // If the index is equal to the size of the resources vector, add a new resource
+        // If there are not lonely resources add the resource to the cache
         if (index == m_resources.size())
         {
             m_resources.push_back(T(a_path));
@@ -62,7 +76,6 @@ private:
 
         // Add the path and index to the resource map
         m_resourceMap[a_path] = index;
-        // Return the index of the resource
         return index;
     };
 
@@ -76,7 +89,7 @@ private:
         for (unsigned int i = 0; i < size; i++)
         {
             // If a resource is lonely (its count is 1), return its index
-            if (m_resources[i].Count() == 1) return i;
+            if (m_resources[i].LastCopy()) return i;
         }
 
         // If no lonely resource is found, return the size of the resources vector

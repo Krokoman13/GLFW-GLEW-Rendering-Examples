@@ -6,17 +6,15 @@
 #include "../graphics/shader/Shader.hpp"
 #include "../graphics/loaders/ShaderUtil.hpp"
 
-ResourceCache<Texture> ResourceManager::texureCache = ResourceCache<Texture>();
-
 Texture ResourceManager::GetTexture(const unsigned int a_uniqueID)
 {
-    return texureCache.Get(PathManager::GetFilePath(a_uniqueID));
+    if (!pTexureCache) throw std::invalid_argument("No texureCache has been assigned");
+    return pTexureCache->Get(PathManager::GetFilePath(a_uniqueID));
 }
-
-ResourceCache<Shader> ResourceManager::shaderCache = ResourceCache<Shader>();
 
 Shader ResourceManager::GetShader(const unsigned int a_vertexhaderPathID, const unsigned int a_fragmentShaderPathID)
 {
+    if (!pShaderCache) throw std::invalid_argument("No shaderCache has been assigned");
     std::string path = ShaderUtil::createString(PathManager::GetFilePath(a_vertexhaderPathID), PathManager::GetFilePath(a_fragmentShaderPathID));
-    return shaderCache.Get(path);
+    return pShaderCache->Get(path);
 }

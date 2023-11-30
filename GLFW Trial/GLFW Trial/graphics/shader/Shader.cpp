@@ -21,6 +21,8 @@ Shader::Shader(const std::string& a_vertex_fragment_Shaderpath) : Shader(ShaderU
 
 Shader Shader::operator=(const Shader& a_other)
 {
+	onDestsruction();
+
 	Counted::operator=(a_other);
 
 	m_programID = a_other.m_programID;
@@ -28,12 +30,17 @@ Shader Shader::operator=(const Shader& a_other)
 	return *this;
 }
 
-void Shader::onLastDestruction()
+void Shader::onDestsruction()
 {
-	if (m_programID == -1) return;
+	if (m_programID == -1 || !LastCopy()) return;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) {
+		std::cerr << "unknown error: " << err << std::endl;
+	}
 
 	glDeleteProgram(m_programID);
-	GLenum err = glGetError();
+	err = glGetError();
 	if (err != GL_NO_ERROR) {
 		std::cerr << "glDeleteProgram failed with error: " << err << std::endl;
 	}

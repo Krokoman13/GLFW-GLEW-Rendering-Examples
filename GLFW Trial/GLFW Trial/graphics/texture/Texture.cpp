@@ -23,7 +23,7 @@ Texture::Texture()
 
 }
 
-Texture::Texture(std::string_view a_filePath)
+Texture::Texture(std::string_view a_filePath) : Counted()
 {
 	int nrChannels = 0;
 	unsigned char* data = stbi_load(a_filePath.data(), &m_width, &m_height, &nrChannels, 4);
@@ -49,6 +49,19 @@ Texture::Texture(const Texture& a_other) : Counted(a_other), m_id(a_other.m_id)
 	m_succesfullLoadedFromFile = a_other.m_succesfullLoadedFromFile;
 }
 
+Texture Texture::operator=(const Texture& a_other)
+{
+	onDestruction();
+
+	Counted::operator=(a_other);
+
+	m_id = a_other.m_id;
+	m_width = a_other.m_width;
+	m_height = a_other.m_height;
+	m_succesfullLoadedFromFile = a_other.m_succesfullLoadedFromFile;
+
+	return *this;
+}
 
 Texture::Texture(const unsigned char* a_data, int a_width, int a_height, GLint a_minFilterParam, GLint a_magFilterParam)
 {
@@ -121,13 +134,18 @@ bool Texture::NeedsMipmaps(GLint a_param)
 		a_param == GL_LINEAR_MIPMAP_LINEAR;
 }
 
-void Texture::onLastDestruction()
+void Texture::onDestruction()
 {
-	if (m_id == 0) return;
+	if (m_id == 0 || !LastCopy()) return;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) {
+		std::cerr << "unknown error: " << err << std::endl;
+	}
 
 	glDeleteTextures(1, &m_id);
 
-	GLenum err = glGetError();
+	err = glGetError();
 	if (err != GL_NO_ERROR) {
 		std::cerr << "glDeleteTextures failed with error: " << err << std::endl;
 	}
