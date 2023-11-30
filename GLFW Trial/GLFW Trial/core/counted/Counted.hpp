@@ -3,16 +3,20 @@
 
 class Counted
 {
-public:
-    Counted() : m_counter(std::shared_ptr<void>(nullptr, [](void*) {})) { onLastDestruction(); };
-    Counted(const Counted& a_other) : m_counter(a_other.m_counter) {};
-    virtual ~Counted() = default;
-
-    inline long Count() { return m_counter.use_count(); };
-
-protected:
-    virtual void onLastDestruction() {};
-
 private:
-    std::shared_ptr<void> m_counter;
+    std::shared_ptr<int> m_counter;
+
+public:
+    Counted() : m_counter(new int(0)) { };
+    Counted(const Counted& a_other) : m_counter(a_other.m_counter) {};
+
+    Counted operator=(const Counted& a_other)
+    {
+        m_counter = a_other.m_counter;
+        return *this;
+    }
+
+    virtual ~Counted() { };
+    inline long Count() const { return m_counter.use_count(); };
+    inline bool IsLastCopy() const { return Count() == 1; }
 };

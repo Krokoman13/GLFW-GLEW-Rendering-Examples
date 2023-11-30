@@ -15,10 +15,11 @@ public:
 	GLBuffer(const GLfloat* a_floatArray, const unsigned int a_arraySize);
 	GLBuffer(const GLBuffer& a_other);
 	GLBuffer operator=(const GLBuffer& a_other);
-
-protected:
-	virtual void onLastDestruction() override;
+	~GLBuffer() { onDestruction(); }
 
 public:
 	inline operator GLuint() { return m_id; }
+
+private:
+	void onDestruction();
 };

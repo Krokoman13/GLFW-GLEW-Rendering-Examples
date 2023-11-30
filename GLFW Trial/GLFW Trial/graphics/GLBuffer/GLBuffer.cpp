@@ -2,7 +2,7 @@
 #include <iostream>
 #include <gl/glew.h>
 
-GLBuffer::GLBuffer(const GLfloat* a_floatArray, const unsigned int a_arraySize)
+GLBuffer::GLBuffer(const GLfloat* a_floatArray, const unsigned int a_arraySize) : m_arraySize(a_arraySize)
 {
 	// create a handle to the buffer
 	glGenBuffers(1, &m_id);
@@ -16,7 +16,7 @@ GLBuffer::GLBuffer(const GLfloat* a_floatArray, const unsigned int a_arraySize)
 	glBindBuffer(GL_ARRAY_BUFFER, m_id);
 
 	// stream all our data to the array buffer endpoint to which our vertexPositionsBufferId is connected
-	glBufferData(GL_ARRAY_BUFFER, a_arraySize * sizeof(GLfloat), a_floatArray, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_arraySize * sizeof(GLfloat), a_floatArray, GL_STATIC_DRAW);
 	err = glGetError();
 	if (err != GL_NO_ERROR) {
 		std::cerr << "glBufferData failed with error: " << err << std::endl;
@@ -34,6 +34,8 @@ GLBuffer::GLBuffer(const GLBuffer& a_other)
 
 GLBuffer GLBuffer::operator=(const GLBuffer& a_other)
 {
+	onDestruction();
+
 	Counted::operator=(a_other);
 
 	m_id = a_other.m_id;
@@ -41,9 +43,9 @@ GLBuffer GLBuffer::operator=(const GLBuffer& a_other)
 	return *this;
 }
 
-void GLBuffer::onLastDestruction()
+void GLBuffer::onDestruction()
 {
-	if (m_arraySize == 0) return; // If m_bufferID was not bound to anything don't delete buffers
+	if (m_id == 0 || !IsLastCopy()) return; // If m_bufferID was not bound to anything don't delete buffers
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glDeleteBuffers(1, &m_id);
 }

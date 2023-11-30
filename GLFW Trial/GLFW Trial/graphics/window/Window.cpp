@@ -6,14 +6,19 @@ void error_callback(int a_error, const char* a_description)
 	std::cerr << "GLFW Error, " << a_error << ": " << a_description << std::endl;
 }
 
+//static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+//{
+//	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+//		glfwSetWindowShouldClose(window, GLFW_TRUE);
+//}
+
 Window::Window(const char* a_title, unsigned int a_width, unsigned int a_height): 
 	camera(a_width, a_height), m_width(a_width), m_height(a_height)
 {
 	//Initialize GLFW
 	if (!glfwInit())
 	{
-		//If initialization fails, print an error message and return -1
-		std::cerr << "Failed to Initialize GLFW";
+		throw std::runtime_error("Failed to Initialize GLFW");
 	}
 
 	//Set the error callback function to be called whenever an error occurs in GLFW
@@ -26,21 +31,26 @@ Window::Window(const char* a_title, unsigned int a_width, unsigned int a_height)
 	m_pWindow = glfwCreateWindow(a_width, a_height, a_title, NULL, NULL);
 	if (!m_pWindow)
 	{
-		//If the window creation fails, print an error message and return -1
-		std::cerr << "Failed to create GLFW window";
+		glfwTerminate();
+		throw std::runtime_error("Failed to create GLFW window");
 	}
+
+	//glfwSetKeyCallback(m_pWindow, key_callback);
 
 	//Make the created window the current context
 	glfwMakeContextCurrent(m_pWindow);
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) {
+		std::cerr << "glfwMakeContextCurrent failed with error: " << err << std::endl;
+	}
 
 	//Enable vertical synchronization
 	glfwSwapInterval(1);
 
 	//Initialize GLEW to manage OpenGL extensions
-	GLenum err = glewInit();
+	err = glewInit();
 	if (err != GLEW_OK)
 	{
-		//If GLEW initialization fails, print an error message and return -1
 		char* error = (char*)glewGetErrorString(err);
 		std::cout << "GLEW INIT FAIL: " << error << std::endl;
 	}

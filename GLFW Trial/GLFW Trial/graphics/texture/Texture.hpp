@@ -13,17 +13,17 @@ private:
 
 protected:
 	//OpenGL id for texture buffer
-	unsigned int m_id;
+	GLuint m_id = 0;
 
 	bool m_succesfullLoadedFromFile = false;
 	int m_width = 0, m_height = 0;
-
-	void onLastDestruction() override;
 
 public:
 	Texture();
 	Texture(std::string_view a_filePath);
 	Texture(const Texture& a_other);
+	Texture operator=(const Texture& a_other);
+	~Texture() { onDestruction(); }
 
 	static GLint defMinFilter;
 	static GLint defMagFilter;
@@ -34,4 +34,7 @@ public:
 	inline int GetId() const { return m_id; };
 	inline int GetWidth() const { return m_width; };
 	inline int GetHeight() const { return m_height; };
+
+private:
+	void onDestruction();
 };

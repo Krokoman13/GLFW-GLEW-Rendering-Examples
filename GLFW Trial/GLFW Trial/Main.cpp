@@ -8,7 +8,10 @@
 
 #include "graphics/sprite/Sprite.hpp"
 #include "graphics/window/Window.hpp"
+
 #include "resourceManager/PathManager.hpp"
+#include "resourceManager/ResourceCache.hpp"
+#include "resourceManager/ResourceManager.hpp"
 
 #include "Resources/fileIndex.hpp"
 
@@ -17,25 +20,23 @@ int main()
 	//PathManager::ResetPaths();
 	PathManager::MapPaths();
 
+	ResourceCache<Texture> texureCache;
+	ResourceCache<Shader> shaderCache;
+	ResourceManager::pTexureCache = &texureCache;
+	ResourceManager::pShaderCache = &shaderCache;
+
 	Window window("Rendering Texture", 640, 480);
 
 	//==============
-	
-	//Image* bigImage = new Image("textures/veryBig.jpg");
-	//bigImage->Load();
+
+	Sprite* winImage = new Sprite(RS__WINDOWSIMAGE_JPG);
+	winImage->SetFilterParam(GL_NEAREST, GL_NEAREST);
+	winImage->Load();
 
 	Sprite* brickImage = new Sprite(RS__BRICKS_JPG);
 	brickImage->Load();
 	brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
 	//brickImage->SetLocalPosition(Vec2(1, 1));
-
-	Sprite* brickImage2 = new Sprite(RS__BRICKS_JPG);
-	brickImage2->Load();
-	brickImage2->SetLocalPosition(window.camera.GetSize() / 2.f);
-
-	Sprite* winImage = new Sprite(RS__WINDOWSIMAGE_JPG);
-	winImage->SetFilterParam(GL_NEAREST, GL_NEAREST);
-	winImage->Load();
 
 	winImage->SetParent(brickImage);
 	winImage->SetLocalPosition(100, 100);
@@ -57,6 +58,9 @@ int main()
 
 	delete brickImage;
 	delete winImage;
+
+	texureCache.Clear();
+	shaderCache.Clear();
 
 	return 0;
 }

@@ -18,7 +18,7 @@ private:
 
 	TextureShader m_texShader;
 
-	GLuint m_vertexBuffer = -1;
+	GLuint m_vertexBufferId = -1;
 	GLuint m_uvsBufferId = -1;
 
 	GLint m_minFilterParam = -1;

@@ -30,62 +30,59 @@ GLuint ShaderUtil::createProgram (const std::string& a_vertexShaderPath, const s
         return 0;
     }
 
-    std::vector<GLuint> shaders;
-    shaders.push_back(vertexShader);
-    shaders.push_back(fragmentShader);
+    GLuint program = compileAndLinkProgram(vertexShader, fragmentShader);
 
-    GLuint program = compileAndLinkProgram(shaders);
+    // after the program has been compiled and linked the individual shaders can be released
+    glDeleteShader(vertexShader);
+    GLenum err = glGetError();
+    if (err != GL_NO_ERROR) {
+        std::cerr << "glDeleteShader1 failed with error: " << err << std::endl;
+    }
 
-    //after the program has been compiled and linked we can release the individual shaders
-    for (size_t i = 0; i < shaders.size(); i++) {
-        glDeleteShader(shaders[i]);
+    glDeleteShader(fragmentShader);
+    err = glGetError();
+    if (err != GL_NO_ERROR) {
+        std::cerr << "glDeleteShader2 failed with error: " << err << std::endl;
     }
 
     return program;
 }
 
 
-GLuint ShaderUtil::loadShader (const std::string& pShaderPath, GLenum pShaderType) {
-    std::cout << "-----------------------------------" << std::endl;
-    std::cout << "Loading file " << pShaderPath << ":" << std::endl << std::endl;
-
-    //open the source path
-    std::ifstream sourceFile(pShaderPath.c_str());
+GLuint ShaderUtil::loadShader (const std::string& a_shaderPath, GLenum a_shaderType) {
+    // Open the source path
+    std::ifstream sourceFile(a_shaderPath.c_str());
     if (!sourceFile) {
-        std::cout << "Could not read shader file <" << pShaderPath << ">";
-        std::cout << "-----------------------------------" << std::endl;
+        std::cerr << "Could not read shader file `" << a_shaderPath << "`" << std::endl;
         return 0;
     }
 
-    //read the whole file into a stream
-    std::stringstream buffer;
-    buffer << sourceFile.rdbuf();
+    // Read the whole file into a string
+    std::string source = std::string((std::istreambuf_iterator<char>(sourceFile)),
+        std::istreambuf_iterator<char>());
     sourceFile.close();
 
-    //dump source on the output stream so we can see it
-    std::string source = buffer.str();
-    std::cout << source;
-    std::cout << "-----------------------------------" << std::endl;
+    // Create a shader and test successful creation
+    GLuint shaderHandle = glCreateShader(a_shaderType);
+    if (shaderHandle == 0) {
+        std::cerr << "Shader creation failed" << std::endl;
+        return 0;
+    }
 
-    //create a shader and test successful creation
-    std::cout << "Creating shader object..." << std::endl;
-    GLuint shaderHandle = glCreateShader(pShaderType);
-    std::cout << "Shader creation successful? " << (shaderHandle != 0 ? "Yes" : "No") << std::endl;
-    if (shaderHandle == 0) return 0;
-
-    //load sourcePointer (which is one string) into shaderHandle, and since its null terminated we can
-    //pass in NULL for the length array
-    std::cout << "Loading source into shader..." << std::endl;
-    char const* sourcePointer = source.c_str();
+    // Load sourcePointer (which is one string) into shaderHandle, and since its null terminated we can
+    // pass in NULL for the length array
+    const char* sourcePointer = source.c_str();
     glShaderSource(shaderHandle, 1, &sourcePointer, NULL);
 
-    //compile and check compilation status
-    std::cout << "Compiling shader..." << std::endl;
+    // compile and check compilation status
     glCompileShader(shaderHandle);
+    
     GLint compileStatus = 0;
+
     glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &compileStatus);
+
     if (compileStatus == GL_FALSE) {
-        std::cout << "Shader compilation failed:" << std::endl;
+        std::cerr << "Shader compilation failed:" << std::endl;
 
         GLint logLength = 0;
         glGetShaderiv(shaderHandle, GL_INFO_LOG_LENGTH, &logLength);
@@ -96,34 +93,49 @@ GLuint ShaderUtil::loadShader (const std::string& pShaderPath, GLenum pShaderTyp
             delete[] errorLog;
         }
         else {
-            std::cout << "No info available." << std::endl;
+            std::cerr << "No info available." << std::endl;
         }
         return 0;
     }
 
-    std::cout << "Shader compilation successful." << std::endl << std::endl;
+    std::cout << "Shader compilation successful." << std::endl;
     return shaderHandle;
 }
 
 /**
- * Take the given list of shaders and link them into a new program
+ * Take the given shaders and link them into a new program
  */
-GLuint ShaderUtil::compileAndLinkProgram (const std::vector<GLuint> &pShaders) {
-    std::cout << "Creating new program..." << std::endl;
+GLuint ShaderUtil::compileAndLinkProgram (const GLuint a_vertexShaderHandle, const GLuint a_fragmentShaderHandle) {
+
     GLuint program = glCreateProgram();
-    std::cout << "Program id:" << program << std::endl;
-    for (size_t i = 0; i < pShaders.size(); i++) {
-        std::cout << "   Attaching shader " << pShaders[i] << std::endl;
-        glAttachShader(program, pShaders[i]);
+    GLenum err = glGetError();
+    if (err != GL_NO_ERROR) {
+        std::cerr << "glCreateProgram failed with error: " << err << std::endl;
     }
-    std::cout << "Linking program..." << std::endl;
+
+    glAttachShader(program, a_vertexShaderHandle);
+    err = glGetError();
+    if (err != GL_NO_ERROR) {
+        std::cerr << "glAttachShader1 failed with error: " << err << std::endl;
+    }
+
+    glAttachShader(program, a_fragmentShaderHandle);
+    err = glGetError();
+    if (err != GL_NO_ERROR) {
+        std::cerr << "glAttachShader2 failed with error: " << err << std::endl;
+    }
+
     glLinkProgram(program);
+    err = glGetError();
+    if (err != GL_NO_ERROR) {
+        std::cerr << "glLinkProgram failed with error: " << err << std::endl;
+    }
 
     int linkStatus = 0;
     glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
 
     if (linkStatus == GL_FALSE) {
-        std::cout << "Linking failed... " << std::endl;
+        std::cerr << "Linking failed... " << std::endl;
 
         int linkLogSize = 0;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &linkLogSize);
@@ -133,17 +145,19 @@ GLuint ShaderUtil::compileAndLinkProgram (const std::vector<GLuint> &pShaders) {
         std::cout << linkLog << std::endl;
         delete[] linkLog;
         return 0;
-
-    }
-    else {
-        std::cout << "Link successful." << std::endl;
     }
 
-    std::cout << std::endl;
+    // detach the shaders again (there is a binary linked program now)
+    glDetachShader(program, a_vertexShaderHandle);
+    err = glGetError();
+    if (err != GL_NO_ERROR) {
+        std::cerr << "glDetachShader1 failed with error: " << err << std::endl;
+    }
 
-    //detach the shaders again (we have a binary linked program now)
-    for (size_t i = 0; i < pShaders.size(); i++) {
-        glDetachShader(program, pShaders[i]);
+    glDetachShader(program, a_fragmentShaderHandle);
+    err = glGetError();
+    if (err != GL_NO_ERROR) {
+        std::cerr << "glDetachShader2 failed with error: " << err << std::endl;
     }
 
     return program;

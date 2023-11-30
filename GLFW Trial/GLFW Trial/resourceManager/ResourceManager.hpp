@@ -9,10 +9,10 @@ class ResourceCache;
 class ResourceManager
 {
 public:
-	static ResourceCache<Texture> texureCache;
+	inline static ResourceCache<Texture>* pTexureCache = nullptr;
 	static Texture GetTexture(const unsigned int a_uniqueID);
 
-	static ResourceCache<Shader> shaderCache;
+	inline static ResourceCache<Shader>* pShaderCache = nullptr;
 	static Shader GetShader(const unsigned int a_vertexhaderPathID, const unsigned int a_fragmentShaderPathID);
 };
 

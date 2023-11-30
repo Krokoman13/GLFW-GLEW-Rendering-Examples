@@ -34,19 +34,7 @@ bool Sprite::Load()
 			 0.5f, -0.5f,  // Bottom right
 		};
 
-		// create a handle to the buffer
-		glGenBuffers(1, &m_vertexBuffer);
-		GLenum err2 = glGetError();
-		if (err2 != GL_NO_ERROR) {
-			std::cerr << "glGenBuffers failed with error: " << err2 << std::endl;
-		}
-		// bind our buffer to the GL_ARRAY_BUFFER endpoint, since none was bound yet,
-		// a new array buffer for vertex position data will be created
-		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-		// stream all our data to the array buffer endpoint to which our vertexPositionsBufferId is connected
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-		// disconnect the funnel
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		m_vertexBufferId = GLBuffer(vertices, 8);
 	}
 
 	{
@@ -58,19 +46,7 @@ bool Sprite::Load()
 			1.f, 0.f,  // Bottom right
 		};
 
-		// create a handle to the buffer
-		glGenBuffers(1, &m_uvsBufferId);
-		GLenum err2 = glGetError();
-		if (err2 != GL_NO_ERROR) {
-			std::cerr << "glGenBuffers failed with error: " << err2 << std::endl;
-		}
-		// bind our buffer to the GL_ARRAY_BUFFER endpoint, since none was bound yet,
-		// a new array buffer for vertex position data will be created
-		glBindBuffer(GL_ARRAY_BUFFER, m_uvsBufferId);
-		// stream all our data to the array buffer endpoint to which our vertexPositionsBufferId is connected
-		glBufferData(GL_ARRAY_BUFFER, sizeof(uvs), uvs, GL_STATIC_DRAW);
-		// disconnect the funnel
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		m_uvsBufferId = GLBuffer(uvs, 8);
 	}
 
 	return succesful;
@@ -124,8 +100,6 @@ void Sprite::Display(const Matrix3& a_pojectionMatrix)
 	glUseProgram(m_texShader.GetProgramID());
 
 	Matrix modelView = a_pojectionMatrix * m_textureTransform.GetGlobalMatrix();
-
-	//Matrix3 thing = (Matrix3)(a_pojectionMatrix * m_textureTransform.GetGlobalMatrix());
 	glUniformMatrix3fv(m_texShader.GetMVPMatrix(), 1, GL_FALSE, modelView.GetArray().Data());
 
 	//tell OpenGL that the data for the vertexIndex is coming in from an array
@@ -133,7 +107,7 @@ void Sprite::Display(const Matrix3& a_pojectionMatrix)
 	//bind the buffer with data.
 	//the moment this buffer is bound instead of 0, the last param of glVertexAttribPointer
 	//is interpreted as an offset and not a pointer
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferId);
 	//send the data for this index to OpenGL, specifying it's format and structure
 	//vertexIndex // 3 bytes per element // floats // don't normalize // the data itself
 	glVertexAttribPointer(m_texShader.GetVertexIndex(), 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
