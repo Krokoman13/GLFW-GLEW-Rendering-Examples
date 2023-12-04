@@ -4,11 +4,13 @@
 
 #include "../../resourceManager/ResourceManager.hpp"
 #include "../../Resources/fileIndex.hpp"
-#include "../GLBuffer/GLBuffer.hpp"
 
 Sprite::Sprite(const unsigned int a_resourceID) : Renderable(0, 0), m_resourceID(a_resourceID)
 {
 	m_textureTransform.SetParent(this);
+
+	if (m_minFilterParam < 0) m_minFilterParam = Texture::defMinFilter;
+	if (m_magFilterParam < 0) m_magFilterParam = Texture::defMagFilter;
 }
 
 Sprite::~Sprite()
@@ -24,50 +26,18 @@ bool Sprite::Load()
 	// Create/request the shader program
 	m_texShader = ResourceManager::GetShader(RS__TEXTURE_VERT, RS__TEXTURE_FRAG);
 
-	{
-		// get index for the attributes in the shader
-		const GLfloat vertices[8] = {
-			//2 triangles forming a rectangle, 3 vertices per triangle, 2 floats per vertex = 8 floats in total
-			-0.5f,  0.5f,  // Top left
-			-0.5f, -0.5f,  // Bottom left
-			 0.5f,  0.5f,  // Top right
-			 0.5f, -0.5f,  // Bottom right
-		};
-
-		m_vertexBufferId = GLBuffer(vertices, 8);
-	}
-
-	{
-		const GLfloat uvs[8] = {
-			//2 triangles forming a rectangle, 3 vertices per triangle, 2 floats per vertex = 8 floats in total
-			0.f, 1.f,  // Top left
-			0.f, 0.f,  // Bottom left
-			1.f, 1.f,  // Top right
-			1.f, 0.f,  // Bottom right
-		};
-
-		m_uvsBufferId = GLBuffer(uvs, 8);
-	}
+	m_vertexBufferId = GLBuffer(DisplayMode::Center);
+	m_uvsBufferId = GLBuffer(DisplayMode::TopLeft);
 
 	return succesful;
 }
 
 bool Sprite::loadTexture()
 {
-
-	if (m_minFilterParam < 0) m_minFilterParam = Texture::defMinFilter;
-	if (m_magFilterParam < 0) m_magFilterParam = Texture::defMagFilter;
-
-	GLint prevMinfilter = Texture::defMinFilter;
-	GLint prevMagfilter = Texture::defMagFilter;
-
 	Texture::defMinFilter = m_minFilterParam;
 	Texture::defMagFilter = m_magFilterParam;
 
 	m_texture = ResourceManager::GetTexture(m_resourceID);
-
-	Texture::defMinFilter = prevMinfilter;
-	Texture::defMagFilter = prevMagfilter;
 
 	Vec2 textureSize = Vec2(float(m_texture.GetWidth()), float(m_texture.GetHeight()));
 	m_textureTransform.SetLocalScale(textureSize);
@@ -81,7 +51,7 @@ bool Sprite::loadTexture()
 	return true;
 }
 
-void Sprite::SetFilterParam(GLint a_minFilter, GLint a_magFilter)
+void Sprite::SetFilter(GLint a_minFilter, GLint a_magFilter)
 {
 	if (Texture::NeedsMipmaps(a_magFilter))
 	{

@@ -32,7 +32,7 @@ Shader Shader::operator=(const Shader& a_other)
 
 void Shader::onDestsruction()
 {
-	if (m_programID == -1 || !IsLastCopy()) return;
+	if (m_programID == -1 || !IsLast()) return;
 
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR) {

@@ -18,5 +18,5 @@ public:
 
     virtual ~Counted() { };
     inline long Count() const { return m_counter.use_count(); };
-    inline bool IsLastCopy() const { return Count() == 1; }
+    inline bool IsLast() const { return Count() == 1; }
 };

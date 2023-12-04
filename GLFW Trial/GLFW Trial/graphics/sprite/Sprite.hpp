@@ -4,6 +4,8 @@
 #include "../Texture/Texture.hpp"
 #include "TextureShader.hpp"
 
+#include "../glBuffer/GLBuffer.hpp"
+
 class Sprite : public Renderable
 {
 public:
@@ -18,8 +20,8 @@ private:
 
 	TextureShader m_texShader;
 
-	GLuint m_vertexBufferId = -1;
-	GLuint m_uvsBufferId = -1;
+	GLBuffer m_vertexBufferId;
+	GLBuffer m_uvsBufferId;
 
 	GLint m_minFilterParam = -1;
 	GLint m_magFilterParam = -1;
@@ -29,6 +31,10 @@ protected:
 	bool loadTexture();
 
 public:
+	inline static GLint defaultMinFilterParam = GL_LINEAR_MIPMAP_LINEAR;
+	inline static GLint defaultMagFilterParam = GL_LINEAR;
+	inline static DisplayMode defaultDisplayMode = DisplayMode::Center;
+
 	virtual bool Load();
-	void SetFilterParam(GLint a_minFilter, GLint a_magFilter);
+	void SetFilter(GLint a_minFilter, GLint a_magFilter);
 };

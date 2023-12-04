@@ -136,7 +136,7 @@ bool Texture::NeedsMipmaps(GLint a_param)
 
 void Texture::onDestruction()
 {
-	if (m_id == 0 || !IsLastCopy()) return;
+	if (m_id == 0 || !IsLast()) return;
 
 	glDeleteTextures(1, &m_id);
 	GLenum err = glGetError();

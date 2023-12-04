@@ -42,7 +42,7 @@ public:
     void Clear()
     {
         while (!m_resources.empty()) {
-            if (!m_resources.back().IsLastCopy())
+            if (!m_resources.back().IsLast())
                 std::cerr << "Warning: resource in cache is NOT the last resource, this means it cannot be cleaned up propperly" << std::endl;
 
             m_resources.pop_back();
@@ -89,7 +89,7 @@ private:
         for (unsigned int i = 0; i < size; i++)
         {
             // If a resource is lonely (its count is 1), return its index
-            if (m_resources[i].IsLastCopy()) return i;
+            if (m_resources[i].IsLast()) return i;
         }
 
         // If no lonely resource is found, return the size of the resources vector

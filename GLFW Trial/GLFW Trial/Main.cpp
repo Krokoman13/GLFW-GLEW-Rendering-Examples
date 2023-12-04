@@ -30,7 +30,7 @@ int main()
 	//==============
 
 	Sprite* winImage = new Sprite(RS__WINDOWSIMAGE_JPG);
-	winImage->SetFilterParam(GL_NEAREST, GL_NEAREST);
+	winImage->SetFilter(GL_NEAREST, GL_NEAREST);
 	winImage->Load();
 
 	Sprite* brickImage = new Sprite(RS__BRICKS_JPG);
@@ -51,7 +51,7 @@ int main()
 		window.Draw(brickImage);
 		window.Draw(winImage);
 		brickImage->identity.Rotate(0.01f);
-		winImage->identity.Rotate(-0.01f);
+		winImage->SetGlobalRotation(0);
 
 		window.Display();
 	}
