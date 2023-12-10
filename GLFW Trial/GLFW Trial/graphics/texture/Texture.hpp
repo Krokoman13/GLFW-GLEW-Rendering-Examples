@@ -1,5 +1,5 @@
 #include <string>
-#include <GL/glew.h>
+#include <glew.h>
 #include <string_view>
 
 #include "../../core/counted/Counted.hpp"

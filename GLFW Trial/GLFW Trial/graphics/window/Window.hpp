@@ -4,7 +4,7 @@
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <GL/glew.h>
+#include <glew.h>
 
 #include "Renderable.hpp"
 

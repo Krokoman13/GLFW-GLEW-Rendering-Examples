@@ -1,6 +1,6 @@
 #include "GLBuffer.hpp"
 #include <iostream>
-#include <gl/glew.h>
+#include <glew.h>
 
 GLBuffer::GLBuffer(const DisplayMode a_displayMode)
 {

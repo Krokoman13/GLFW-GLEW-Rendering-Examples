@@ -1,6 +1,6 @@
 #include "Sprite.hpp"
 #include <iostream>
-#include <gl/glew.h>
+#include <glew.h>
 
 #include "../../resourceManager/ResourceManager.hpp"
 #include "../../Resources/fileIndex.hpp"
