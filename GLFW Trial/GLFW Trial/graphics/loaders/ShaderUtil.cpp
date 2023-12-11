@@ -98,7 +98,7 @@ GLuint ShaderUtil::loadShader (const std::string& a_shaderPath, GLenum a_shaderT
         return 0;
     }
 
-    std::cout << "Shader compilation successful." << std::endl;
+    std::cout << "Shader: " << a_shaderPath << " compiled successfuly." << std::endl;
     return shaderHandle;
 }
 

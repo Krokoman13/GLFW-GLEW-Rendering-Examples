@@ -179,9 +179,10 @@
     <ClInclude Include="graphics\window\Renderable.hpp" />
     <ClInclude Include="graphics\window\Window.hpp" />
     <ClInclude Include="resourceManager\PathManager.hpp" />
-    <ClInclude Include="resourceManager\ResourceCache.hpp" />
+    <ClInclude Include="resourceManager\ResourceCache\ResourceCache.hpp" />
     <ClInclude Include="resourceManager\ResourceManager.hpp" />
     <ClInclude Include="Resources\fileIndex.hpp" />
+    <ClInclude Include="resourceManager\ResourceCache\SelfRegResourceCache.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
