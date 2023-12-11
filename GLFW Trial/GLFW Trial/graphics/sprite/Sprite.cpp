@@ -26,8 +26,8 @@ bool Sprite::Load()
 	// Create/request the shader program
 	m_texShader = ResourceManager::GetShader(RS__TEXTURE_VERT, RS__TEXTURE_FRAG);
 
-	m_vertexBufferId = GLBuffer(DisplayMode::Center);
-	m_uvsBufferId = GLBuffer(DisplayMode::TopLeft);
+	m_vertexBufferId = ResourceManager::GetGLBuffer(DisplayMode::Center);
+	m_uvsBufferId = ResourceManager::GetGLBuffer(DisplayMode::TopLeft);
 
 	return succesful;
 }

@@ -23,8 +23,11 @@ int main()
 
 	SelfRegResourceCache<Texture, std::string> texureCache;
 	ResourceCache<Shader, std::string> shaderCache;
+	ResourceCache<GLBuffer, unsigned int> bufferCache;
+
 	ResourceManager::pTexureCache = &texureCache;
 	ResourceManager::pShaderCache = &shaderCache;
+	ResourceManager::pGLBufferCache = &bufferCache;
 
 	Window window("Rendering Texture", 640, 480);
 
