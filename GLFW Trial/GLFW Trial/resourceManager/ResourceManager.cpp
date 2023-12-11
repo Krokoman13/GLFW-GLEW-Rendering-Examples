@@ -11,9 +11,10 @@
 
 Texture ResourceManager::GetTexture(const unsigned int a_uniqueID)
 {
-    if (!pTexureCache) throw std::invalid_argument("No texureCache has been assigned");
-
     std::string path = PathManager::GetFilePath(a_uniqueID);
+
+    if (!pTexureCache) return Texture(path);    //If no cache exists, create and return a new texture
+
     if (pTexureCache->Exists(path)){
         std::cout << "ResourceManager: " << path << " already cached, not loaded again" << std::endl;
         return pTexureCache->Get(path);
@@ -26,9 +27,10 @@ Texture ResourceManager::GetTexture(const unsigned int a_uniqueID)
 
 Shader ResourceManager::GetShader(const unsigned int a_vertexhaderPathID, const unsigned int a_fragmentShaderPathID)
 {
-    if (!pShaderCache) throw std::invalid_argument("No shaderCache has been assigned");
-
     std::string path = ShaderUtil::createString(PathManager::GetFilePath(a_vertexhaderPathID), PathManager::GetFilePath(a_fragmentShaderPathID));
+
+    if (!pShaderCache) return Shader(path);    //If no cache exists, create and return a new shader
+
     if (pShaderCache->Exists(path))  {
         std::cout << "ResourceManager: " << path << " already cached, not loaded again" << std::endl;
         return pShaderCache->Get(path);
@@ -41,9 +43,9 @@ Shader ResourceManager::GetShader(const unsigned int a_vertexhaderPathID, const 
 
 GLBuffer ResourceManager::GetGLBuffer(const unsigned int a_displayModeID)
 {
-    if (!pGLBufferCache) throw std::invalid_argument("No GLBufferCache has been assigned");
-
     DisplayMode displayMode = DisplayMode(a_displayModeID);
+
+    if (!pGLBufferCache) return GLBuffer(displayMode);    //If no cache exists, create and return a new glBuffer
 
     if (pGLBufferCache->Exists(displayMode)) {
         std::cout << "ResourceManager: " << displayMode << " already cached, not loaded again" << std::endl;
