@@ -21,7 +21,7 @@ public:
         // Otherwise, overwrite the lonely resource
         else
         {
-            std::cout << "Found a lonely Resouce, will be overwritten by a new one!" << std::endl;
+            //std::cout << "Found a lonely Resouce, will be overwritten by a new one!" << std::endl;
             const TKey& previous = findByValue(index);
             this->m_resources[index] = a_resource;
             this->m_resourceMap.erase(previous);

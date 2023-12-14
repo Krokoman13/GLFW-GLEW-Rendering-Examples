@@ -16,12 +16,15 @@
 
 #include "Resources/fileIndex.hpp"
 
+#include <chrono>
+#include <thread>
+
 int main()
 {
 	//PathManager::ResetPaths();
 	PathManager::MapPaths();
 
-	SelfRegResourceCache<Texture, std::string> texureCache;
+	ResourceCache<Texture, std::string> texureCache;
 	ResourceCache<Shader, std::string> shaderCache;
 	ResourceCache<GLBuffer, unsigned int> bufferCache;
 
@@ -29,48 +32,66 @@ int main()
 	ResourceManager::pShaderCache = &shaderCache;
 	ResourceManager::pGLBufferCache = &bufferCache;
 
-	Window window("Rendering Texture", 640, 480);
+	Window window("Rendering Texture", 640, 480, false);
 
 	//==============
+	//Start
+	std::vector<Renderable*> sprites;
+	unsigned int i = 0;
+	unsigned int size = 220;
+	Vec2 offset(150, 150);
 
-	{
-		Sprite* brickImage = new Sprite(RS__BRICKS_JPG);
-		brickImage->Load();
-		brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
-		delete brickImage;
-	}
-
-	Sprite* brickImage = new Sprite(RS__BRICKS_JPG);
-	brickImage->Load();
-	brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
-
-	Sprite* winImage = new Sprite(RS__WINDOWSIMAGE_JPG);
-	winImage->SetFilter(GL_NEAREST, GL_NEAREST);
-	winImage->Load();
-
-
-	//brickImage->SetLocalPosition(Vec2(1, 1));
-
-	winImage->SetParent(brickImage);
-	winImage->SetLocalPosition(100, 100);
-	winImage->SetLocalScale(10.f);
+	unsigned int maxColumns = 1;
+	unsigned int maxRows = 1;
 
 	//==============
+	std::chrono::steady_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
 	//Main loop
 	while (window.IsOpen())
 	{
-		//Update loop
-		window.Draw(brickImage);
-		window.Draw(winImage);
-		brickImage->identity.Rotate(0.01f);
-		winImage->SetGlobalRotation(0);
+		window.clear();
 
-		window.Display();
+		//==============
+		//Update loop
+
+		window.Draw(sprites);
+
+		//==============
+
+		window.endDisplay();
+
+		if (i == maxColumns * maxRows)
+		{
+			std::chrono::steady_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+			std::chrono::milliseconds ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+			std::cout << "Duration: " << ms_int << std::endl;
+		}
+		else if (i < maxColumns * maxRows)
+		{
+			Sprite* nextSprite = new Sprite(RS__BRICKS_JPG);
+			nextSprite->Load();
+			nextSprite->SetLocalScale(0.1f);
+			nextSprite->SetLocalPosition(Vec2(size * (i % maxColumns), size * (i / maxColumns)) + offset);
+			sprites.push_back(nextSprite);
+		}
+
+		i++;
 	}
+
+	//==============
+	//End
+	while (!sprites.empty())
+	{
+		delete sprites.back();
+		sprites.pop_back();
+	}
+
+	//==============
 
 	texureCache.Clear();
 	shaderCache.Clear();
+	bufferCache.Clear();
 
 	return 0;
 }

@@ -30,7 +30,7 @@ Texture::Texture(std::string_view a_filePath) : Counted()
 
 	if (data)
 	{
-		std::cout << "Texure: " << a_filePath << " loaded succesfully" << std::endl;
+		//std::cout << "Texure: " << a_filePath << " loaded succesfully" << std::endl;
 		initTexture(data, m_width, m_height, defMagFilter, defMinFilter);
 		stbi_image_free(data);
 		m_succesfullLoadedFromFile = true;
