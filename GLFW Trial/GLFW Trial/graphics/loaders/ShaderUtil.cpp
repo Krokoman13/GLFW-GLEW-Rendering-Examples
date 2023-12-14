@@ -26,7 +26,7 @@ GLuint ShaderUtil::createProgram (const std::string& a_vertexShaderPath, const s
     GLuint fragmentShader = loadShader(a_fragmentShaderPath, GL_FRAGMENT_SHADER);
 
     if (vertexShader == 0 || fragmentShader == 0) {
-        std::cout << "One or more shaders failed, exiting..." << std::endl;
+        std::cerr << "One or more shaders failed, exiting..." << std::endl;
         return 0;
     }
 
@@ -89,7 +89,7 @@ GLuint ShaderUtil::loadShader (const std::string& a_shaderPath, GLenum a_shaderT
         if (logLength > 0) {
             GLchar* errorLog = new GLchar[logLength];
             glGetShaderInfoLog(shaderHandle, logLength, NULL, errorLog);
-            std::cout << errorLog << std::endl;
+            std::cerr << errorLog << std::endl;
             delete[] errorLog;
         }
         else {
@@ -142,7 +142,7 @@ GLuint ShaderUtil::compileAndLinkProgram (const GLuint a_vertexShaderHandle, con
 
         GLchar* linkLog = new GLchar[linkLogSize];
         glGetProgramInfoLog(program, linkLogSize, NULL, linkLog);
-        std::cout << linkLog << std::endl;
+        std::cerr << linkLog << std::endl;
         delete[] linkLog;
         return 0;
     }

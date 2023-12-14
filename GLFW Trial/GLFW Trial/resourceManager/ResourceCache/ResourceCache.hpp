@@ -47,7 +47,7 @@ public:
 
     virtual void AddNewResource(const TKey& a_key, const TResource a_resource)
     {
-        if (!Exists(a_key)) std::invalid_argument("Key already existst, cannot add new resource, make sure to check using `Exists(TKey)`");
+        if (Exists(a_key)) throw std::invalid_argument("Key already existst, cannot add new resource, make sure to check using `Exists(TKey)`");
 
         m_resources.push_back(a_resource);
         m_resourceMap[a_key] = m_resources.size() - 1;

@@ -10,6 +10,7 @@ public:
 	Transform();
 	Transform(const Vec2& a_localPosition);
 	Transform(const float a_x, const float a_y);
+	virtual ~Transform() = default;
 
 	Matrix3 identity;
 

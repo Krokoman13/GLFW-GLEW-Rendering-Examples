@@ -12,7 +12,7 @@ void error_callback(int a_error, const char* a_description)
 //		glfwSetWindowShouldClose(window, GLFW_TRUE);
 //}
 
-Window::Window(const char* a_title, unsigned int a_width, unsigned int a_height): 
+Window::Window(const char* a_title, const unsigned int a_width, const unsigned int a_height, const bool a_hasVsync):
 	camera(a_width, a_height), m_width(a_width), m_height(a_height)
 {
 	//Initialize GLFW
@@ -44,15 +44,15 @@ Window::Window(const char* a_title, unsigned int a_width, unsigned int a_height)
 		std::cerr << "glfwMakeContextCurrent failed with error: " << err << std::endl;
 	}
 
-	//Enable vertical synchronization
-	glfwSwapInterval(1);
+	//Set vertical synchronization
+	SetVSync(a_hasVsync);
 
 	//Initialize GLEW to manage OpenGL extensions
 	err = glewInit();
 	if (err != GLEW_OK)
 	{
 		char* error = (char*)glewGetErrorString(err);
-		std::cout << "GLEW INIT FAIL: " << error << std::endl;
+		std::cerr << "GLEW INIT FAIL: " << error << std::endl;
 	}
 
 	glClearColor(0, 0, 0, 1);
@@ -65,34 +65,40 @@ Window::~Window()
 	glfwTerminate();
 }
 
+void Window::SetVSync(const bool a_hasVsync)
+{
+	glfwSwapInterval(a_hasVsync ? 1 : 0);
+}
+
 bool Window::IsOpen()
 {
 	return !glfwWindowShouldClose(m_pWindow);
 }
 
-void Window::Draw(Renderable* a_renderable)
+void Window::Draw(const Renderable* a_toRender)
 {
-	m_toRender.push(a_renderable);
+	a_toRender->Display(camera);
 }
 
-void Window::Display()
+void Window::Draw(const std::vector<Renderable*>& a_toRender)
 {
-	Display(m_toRender);
-}
-
-void Window::Display(std::queue<Renderable*>& a_toRender)
-{
-	//Clear the color buffer
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	while (!a_toRender.empty()) {
-		a_toRender.front()->Display(camera);
-		a_toRender.pop();
+	for (auto it : a_toRender)
+	{
+		Draw(it);
 	}
+}
 
+void Window::endDisplay()
+{
 	//Swap the front and back buffers
 	glfwSwapBuffers(m_pWindow);
 
 	//Poll for and process events
 	glfwPollEvents();
+}
+
+void Window::clear()
+{
+	//Clear the color buffer
+	glClear(GL_COLOR_BUFFER_BIT);
 }

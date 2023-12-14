@@ -27,7 +27,7 @@ private:
 	GLint m_magFilterParam = -1;
 
 protected:
-	virtual void Display(const Matrix3& a_pojectionMatrix) override;
+	virtual void Display(const Matrix3& a_pojectionMatrix) const override;
 	bool loadTexture();
 
 public:

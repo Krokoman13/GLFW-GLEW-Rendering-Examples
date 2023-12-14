@@ -15,10 +15,10 @@ public:
 	TextureShader operator=(const Shader& a_other);
 
 public:
-	inline GLint GetUvIndex() { return m_uvIndex; }
-	inline GLint GetVertexIndex() { return m_vertexIndex; }
-	inline GLint GetDiffuseTextureIndex() { return m_diffuseTextureIndex; }
-	inline GLint GetMVPMatrix() { return m_MVPMatrixIndex; }
+	inline GLint GetUvIndex() const { return m_uvIndex; }
+	inline GLint GetVertexIndex() const { return m_vertexIndex; }
+	inline GLint GetDiffuseTextureIndex() const { return m_diffuseTextureIndex; }
+	inline GLint GetMVPMatrix() const { return m_MVPMatrixIndex; }
 
 private:
 	void setIndexes();

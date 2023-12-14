@@ -37,7 +37,7 @@ Texture::Texture(std::string_view a_filePath) : Counted()
 	}
 	else
 	{
-		std::cout << "Failed to load texture: " << a_filePath << " will use a NULL Image instead" << std::endl;
+		std::cerr << "Failed to load texture: " << a_filePath << " will use a NULL Image instead" << std::endl;
 		initTexture(nullPixelData, 2, 2, GL_NEAREST, GL_NEAREST);
 	}
 }

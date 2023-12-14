@@ -64,7 +64,7 @@ void Sprite::SetFilter(GLint a_minFilter, GLint a_magFilter)
 }
 
 
-void Sprite::Display(const Matrix3& a_pojectionMatrix)
+void Sprite::Display(const Matrix3& a_pojectionMatrix) const
 {
 	//tell the GPU to use this program
 	glUseProgram(m_texShader.GetProgramID());

@@ -8,7 +8,7 @@ class SelfRegResourceCache : public ResourceCache<TResource, TKey>
 public:
     virtual void AddNewResource(const TKey& a_key, const TResource a_resource) override
     {
-        if (this->Exists(a_key)) std::invalid_argument("Key already exists, cannot add new resource, make sure to check using `Exists(TKey)`");
+        if (this->Exists(a_key)) throw std::invalid_argument("Key already exists, cannot add new resource, make sure to check using `Exists(TKey)`");
 
         // Try to find a lonely resource to overwrite
         const unsigned int index = findLonely();

@@ -8,6 +8,6 @@ public:
 
 public:
 	virtual bool Load() = 0;
-	virtual void Display(const Matrix3& a_pojectionMatrix) = 0;
+	virtual void Display(const Matrix3& a_pojectionMatrix) const = 0;
 };
 
