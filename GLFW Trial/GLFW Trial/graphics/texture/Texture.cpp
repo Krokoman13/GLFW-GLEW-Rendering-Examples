@@ -31,7 +31,7 @@ Texture::Texture(std::string_view a_filePath) : Counted()
 	if (data)
 	{
 		std::cout << "Texure: " << a_filePath << " loaded succesfully" << std::endl;
-		initTexture(data, m_width, m_height, defMagFilter, defMinFilter);
+		initTexture(data, m_width, m_height, defMinFilter, defMagFilter);
 		stbi_image_free(data);
 		m_succesfullLoadedFromFile = true;
 	}
@@ -73,7 +73,8 @@ void Texture::initTexture(const unsigned char* a_data, int a_width, int a_height
 	m_width = a_width;
 	m_height = a_height;
 
-	if (NeedsMipmaps(a_magFilterParam)) std::cerr << "Warning: Mag filter cannot user mipmaps!";
+	if (NeedsMipmaps(a_magFilterParam)) 
+		std::cerr << "Warning: Mag filter cannot user mipmaps!" << std::endl;
 
 	glGenTextures(1, &m_id);
 	GLenum err = glGetError();

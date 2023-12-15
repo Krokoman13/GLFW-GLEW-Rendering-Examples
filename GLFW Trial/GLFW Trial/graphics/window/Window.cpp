@@ -55,6 +55,9 @@ Window::Window(const char* a_title, unsigned int a_width, unsigned int a_height)
 		std::cout << "GLEW INIT FAIL: " << error << std::endl;
 	}
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glClearColor(0, 0, 0, 1);
 }
 
