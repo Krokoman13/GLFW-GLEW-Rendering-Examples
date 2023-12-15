@@ -152,6 +152,7 @@
     <ClCompile Include="graphics\GLBuffer\GLBuffer.cpp" />
     <ClCompile Include="graphics\loaders\ShaderUtil.cpp" />
     <ClCompile Include="graphics\shader\Shader.cpp" />
+    <ClCompile Include="graphics\sprite\animationSprite\AnimationSprite.cpp" />
     <ClCompile Include="graphics\sprite\Sprite.cpp" />
     <ClCompile Include="graphics\sprite\TextureShader.cpp" />
     <ClCompile Include="graphics\texture\Texture.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="graphics\loaders\ShaderUtil.hpp" />
     <ClInclude Include="graphics\loaders\stb_image.h" />
     <ClInclude Include="graphics\shader\Shader.hpp" />
+    <ClInclude Include="graphics\sprite\animationSprite\AnimationSprite.hpp" />
     <ClInclude Include="graphics\sprite\Sprite.hpp" />
     <ClInclude Include="graphics\sprite\TextureShader.hpp" />
     <ClInclude Include="graphics\texture\Texture.hpp" />
