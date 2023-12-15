@@ -55,6 +55,9 @@ Window::Window(const char* a_title, const unsigned int a_width, const unsigned i
 		std::cerr << "GLEW INIT FAIL: " << error << std::endl;
 	}
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glClearColor(0, 0, 0, 1);
 }
 
@@ -88,7 +91,7 @@ void Window::Draw(const std::vector<Renderable*>& a_toRender)
 	}
 }
 
-void Window::endDisplay()
+void Window::Display()
 {
 	//Swap the front and back buffers
 	glfwSwapBuffers(m_pWindow);
@@ -97,7 +100,7 @@ void Window::endDisplay()
 	glfwPollEvents();
 }
 
-void Window::clear()
+void Window::Clear()
 {
 	//Clear the color buffer
 	glClear(GL_COLOR_BUFFER_BIT);

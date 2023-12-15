@@ -54,7 +54,7 @@ public:
 	void Draw(const Renderable* a_toRender);
 	void Draw(const std::vector<Renderable*>& a_toRender);
 
-	void endDisplay();
-	void clear();
+	void Display();
+	void Clear();
 };
 

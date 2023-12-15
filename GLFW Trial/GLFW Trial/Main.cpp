@@ -43,6 +43,7 @@ int main()
 	Sprite* brickImage = new Sprite(RS__BRICKS_JPG);
 	brickImage->Load();
 	brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
+	brickImage->diffuseColor = Color::Hex(0xADD8E6);
 
 	Sprite* winImage = new Sprite(RS__WINDOWSIMAGE_JPG);
 	winImage->SetFilter(GL_NEAREST, GL_NEAREST);
@@ -60,6 +61,8 @@ int main()
 	//Main loop
 	while (window.IsOpen())
 	{
+		window.Clear();
+
 		//Update loop
 		window.Draw(brickImage);
 		window.Draw(winImage);
@@ -68,6 +71,9 @@ int main()
 
 		window.Display();
 	}
+
+	delete brickImage;
+	delete winImage;
 
 	texureCache.Clear();
 	shaderCache.Clear();

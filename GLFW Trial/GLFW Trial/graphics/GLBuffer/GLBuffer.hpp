@@ -19,7 +19,8 @@ public:
 	~GLBuffer() { onDestruction(); }
 
 public:
-	inline operator GLuint() const { return m_bufferID; }
+	inline GLuint GetId() const { return m_bufferID; }
+	inline operator GLuint() const{ return GetId(); }
 
 private:
 	void onDestruction();

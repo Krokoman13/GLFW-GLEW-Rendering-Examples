@@ -8,9 +8,10 @@
 Sprite::Sprite(const unsigned int a_resourceID) : Renderable(0, 0), m_resourceID(a_resourceID)
 {
 	m_textureTransform.SetParent(this);
-
-	if (m_minFilterParam < 0) m_minFilterParam = Texture::defMinFilter;
-	if (m_magFilterParam < 0) m_magFilterParam = Texture::defMagFilter;
+	
+	m_minFilterParam = Sprite::defaultMinFilterParam;
+	m_magFilterParam = Sprite::defaultMagFilterParam;
+	m_displayMode = Sprite::defaultDisplayMode;
 }
 
 Sprite::~Sprite()
@@ -24,12 +25,37 @@ bool Sprite::Load()
 	succesful = loadTexture();
 
 	// Create/request the shader program
-	m_texShader = ResourceManager::GetShader(RS__TEXTURE_VERT, RS__TEXTURE_FRAG);
+	if (!loadShader())
+	{
+		std::cerr << "Something went wrong when loading the shader" << std::endl;
+		succesful = false;
+	}
 
-	m_vertexBufferId = ResourceManager::GetGLBuffer(DisplayMode::Center);
-	m_uvsBufferId = ResourceManager::GetGLBuffer(DisplayMode::TopLeft);
+	if (!loadUVBuffer())
+	{
+		std::cerr << "Something went wrong when loading the UV buffer" << std::endl;
+		succesful = false;
+	}
+
+	if (!loadVertexBuffer())
+	{
+		std::cerr << "Something went wrong when loading the Vertex buffer" << std::endl;
+		succesful = false;
+	}
 
 	return succesful;
+}
+
+void Sprite::SetDisplayMode(const DisplayMode a_displayMode)
+{
+	if (m_displayMode == a_displayMode) return;
+
+	m_displayMode = a_displayMode;
+
+	if (m_vertexBuffer.GetId() == 0) return;
+
+	bool succesful = loadVertexBuffer();
+	if (!succesful) std::cerr << "Something went wrong when loading the Vertex buffer" << std::endl;
 }
 
 bool Sprite::loadTexture()
@@ -49,6 +75,27 @@ bool Sprite::loadTexture()
 	}
 
 	return true;
+}
+
+bool Sprite::loadUVBuffer()
+{
+	m_uvsBuffer = GLBuffer(DisplayMode::TopLeft);
+
+	return m_uvsBuffer.GetId() != 0;
+}
+
+bool Sprite::loadShader()
+{
+	m_texShader = ResourceManager::GetShader(RS__TEXTURE_VERT, RS__TEXTURE_FRAG);
+
+	return m_texShader.GetProgramID() != 0;
+}
+
+bool Sprite::loadVertexBuffer()
+{
+	m_vertexBuffer = GLBuffer(m_displayMode);
+
+	return m_vertexBuffer.GetId() != 0;
 }
 
 void Sprite::SetFilter(GLint a_minFilter, GLint a_magFilter)
@@ -72,12 +119,19 @@ void Sprite::Display(const Matrix3& a_pojectionMatrix) const
 	Matrix modelView = a_pojectionMatrix * m_textureTransform.GetGlobalMatrix();
 	glUniformMatrix3fv(m_texShader.GetMVPMatrix(), 1, GL_FALSE, modelView.GetArray().Data());
 
+	glUniform4f(m_texShader.GetDiffuseColorIndex(), 
+		diffuseColor.GetRedUnit(), 
+		diffuseColor.GetGreenUnit(), 
+		diffuseColor.GetBlueUnit(), 
+		diffuseColor.GetAlphaUnit()
+	);
+
 	//tell OpenGL that the data for the vertexIndex is coming in from an array
 	glEnableVertexAttribArray(m_texShader.GetVertexIndex());
 	//bind the buffer with data.
 	//the moment this buffer is bound instead of 0, the last param of glVertexAttribPointer
 	//is interpreted as an offset and not a pointer
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	//send the data for this index to OpenGL, specifying it's format and structure
 	//vertexIndex // 3 bytes per element // floats // don't normalize // the data itself
 	glVertexAttribPointer(m_texShader.GetVertexIndex(), 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -87,7 +141,7 @@ void Sprite::Display(const Matrix3& a_pojectionMatrix) const
 	//bind the buffer with data.
 	//the moment this buffer is bound instead of 0, the last param of glVertexAttribPointer
 	//is interpreted as an offset and not a pointer
-	glBindBuffer(GL_ARRAY_BUFFER, m_uvsBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_uvsBuffer);
 	//send the data for this index to OpenGL, specifying it's format and structure
 	//vertexIndex // 3 bytes per element // floats // don't normalize // the data itself
 	glVertexAttribPointer(m_texShader.GetUvIndex(), 2, GL_FLOAT, GL_FALSE, 0, (void*)0);

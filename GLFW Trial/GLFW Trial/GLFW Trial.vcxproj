@@ -148,6 +148,7 @@
     <ClCompile Include="core\math\Matrix3.cpp" />
     <ClCompile Include="core\math\Vec2.cpp" />
     <ClCompile Include="core\Transform.cpp" />
+    <ClCompile Include="graphics\Clolor.cpp" />
     <ClCompile Include="graphics\GLBuffer\GLBuffer.cpp" />
     <ClCompile Include="graphics\loaders\ShaderUtil.cpp" />
     <ClCompile Include="graphics\shader\Shader.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="core\math\Matrix3.hpp" />
     <ClInclude Include="core\math\Vec2.hpp" />
     <ClInclude Include="core\Transform.hpp" />
+    <ClInclude Include="graphics\Clolor.hpp" />
     <ClInclude Include="graphics\displayMode\DisplayMode.hpp" />
     <ClInclude Include="graphics\GLBuffer\GLBuffer.hpp" />
     <ClInclude Include="graphics\loaders\ShaderUtil.hpp" />
