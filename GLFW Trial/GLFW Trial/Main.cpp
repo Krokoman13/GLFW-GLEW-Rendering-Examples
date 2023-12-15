@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "graphics/sprite/Sprite.hpp"
+#include "graphics/sprite/animationSprite/AnimationSprite.hpp"
 #include "graphics/window/Window.hpp"
 
 #include "resourceManager/PathManager.hpp"
@@ -43,12 +44,21 @@ int main()
 	Sprite* brickImage = new Sprite(RS__BRICKS_JPG);
 	brickImage->Load();
 	brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
-	brickImage->diffuseColor = Color::Hex(0xADD8E6);
 
 	Sprite* winImage = new Sprite(RS__WINDOWSIMAGE_JPG);
 	winImage->SetFilter(GL_NEAREST, GL_NEAREST);
 	winImage->Load();
 
+	AnimationSprite* blankMan = new AnimationSprite(RS__BLANK_WALKING_PNG, 3, 4);
+	blankMan->SetFilter(GL_NEAREST, GL_NEAREST);
+	blankMan->Load();
+	blankMan->diffuseColor = Color::Hex(0xADD8E6);
+	blankMan->SetLocalPosition(100, 100);
+
+	AnimationSprite* blankMan2 = new AnimationSprite(RS__BLANK_WALKING_PNG, 3, 4);
+	blankMan2->Load();
+	blankMan2->diffuseColor = Color::Hex(0xFF7F7F);
+	blankMan2->SetLocalPosition(500, 100);
 
 	//brickImage->SetLocalPosition(Vec2(1, 1));
 
@@ -58,6 +68,7 @@ int main()
 
 	//==============
 
+	unsigned int i = 0;
 	//Main loop
 	while (window.IsOpen())
 	{
@@ -69,11 +80,20 @@ int main()
 		brickImage->identity.Rotate(0.01f);
 		winImage->SetGlobalRotation(0);
 
+		window.Draw(blankMan);
+		window.Draw(blankMan2);
+		blankMan->SetCurrentFrame((i / 15) + 3);
+		blankMan2->SetCurrentFrame((i / 15) + 6);
+		i++;
+
+		if (i >= (3 * 15)) i = 0;
+
 		window.Display();
 	}
 
 	delete brickImage;
 	delete winImage;
+	delete blankMan;
 
 	texureCache.Clear();
 	shaderCache.Clear();

@@ -13,5 +13,12 @@ private:
 
 public:
 	AnimationSprite(const unsigned int a_resourceID, const unsigned int a_columns, const unsigned int a_rows);
+
+public:
+	void SetCurrentFrame(const unsigned int a_frame);
+	virtual void Display(const Matrix3& a_pojectionMatrix) const override;
+
+protected:
+	virtual bool loadShader() override;
 };
 
