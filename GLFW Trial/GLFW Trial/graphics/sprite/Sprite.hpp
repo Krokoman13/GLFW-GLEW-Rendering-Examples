@@ -15,6 +15,8 @@ protected:
 	Texture m_texture;
 	Transform m_textureTransform;
 
+	Matrix3 m_uvOffset;
+
 	TextureShader m_texShader;
 
 	GLBuffer m_vertexBuffer;
@@ -47,4 +49,9 @@ protected:
 	virtual bool loadShader();
 	virtual bool loadUVBuffer();
 	bool loadVertexBuffer();
+
+	virtual void initializeShader() const;
+	virtual void setShaderValues(const Matrix3& a_pojectionMatrix) const;
+	virtual void drawAndDisableArrays() const;
+
 };

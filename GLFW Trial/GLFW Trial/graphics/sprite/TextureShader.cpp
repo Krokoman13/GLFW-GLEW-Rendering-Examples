@@ -20,10 +20,11 @@ TextureShader TextureShader::operator=(const Shader& a_other)
 }
 
 void TextureShader::setIndexes()
-{
-	m_vertexIndex = GetAttribute("vertex");
+{	
 	m_uvIndex = GetAttribute("uv");
+	m_vertexIndex = GetAttribute("vertex");
 	m_MVPMatrixIndex = GetUniform("mvp");
+	m_uvOffsetIndex = GetUniform("uvOffset");
 	m_diffuseTextureIndex = GetUniform("diffuseTexture");
 	m_diffuseColorIndex = GetUniform("diffuseColor");
 }

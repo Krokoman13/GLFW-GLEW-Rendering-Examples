@@ -24,9 +24,6 @@
     <ClCompile Include="graphics\window\Window.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\DefaultImageVariables.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\texture\Texture.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -63,6 +60,15 @@
     <ClCompile Include="graphics\GLBuffer\GLBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\Clolor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\animations\animationSprite\AnimationSprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\sprite\animationSprite\AnimationSprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\loaders\ShaderUtil.hpp">
@@ -72,9 +78,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="graphics\window\Renderable.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\DefaultImageVariables.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="graphics\texture\Texture.hpp">
@@ -113,9 +116,6 @@
     <ClInclude Include="resourceManager\PathManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resourceManager\ResourceCache.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resourceManager\ResourceManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -126,6 +126,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="graphics\loaders\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Clolor.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\animations\animationSprite\AnimationSprite.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resourceManager\ResourceCache\ResourceCache.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resourceManager\ResourceCache\SelfRegResourceCache.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

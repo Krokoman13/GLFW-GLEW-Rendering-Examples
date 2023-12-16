@@ -6,8 +6,11 @@
 #include <iostream>
 #include <memory>
 
+#include <chrono>
+#include <thread>
+
 #include "graphics/sprite/Sprite.hpp"
-#include "graphics/sprite/animationSprite/AnimationSprite.hpp"
+#include "graphics/animations/animationSprite/AnimationSprite.hpp"
 #include "graphics/window/Window.hpp"
 
 #include "resourceManager/PathManager.hpp"
@@ -52,11 +55,30 @@ int main()
 	AnimationSprite* blankMan = new AnimationSprite(RS__BLANK_WALKING_PNG, 3, 4);
 	blankMan->SetFilter(GL_NEAREST, GL_NEAREST);
 	blankMan->Load();
+
+	Animation right(
+		{AnimationFrame(3, 1.f), AnimationFrame(4, 0.3f), AnimationFrame(5, 0.3f), 
+		 AnimationFrame(3, 0.3f), AnimationFrame(4, 0.3f), AnimationFrame(5, 1.f) },
+		[blankMan] {blankMan->SetCurrentAnimation("left"); }
+	);
+	right.frames[1].SetDuration(1.f / 3.f);
+	blankMan->AddAnimation(right, "right");
+
+	Animation left(
+		{AnimationFrame(9, 1.f), AnimationFrame(10, 0.3f), AnimationFrame(11, 0.3f), 
+		AnimationFrame(9, 0.3f), AnimationFrame(10, 0.3f), AnimationFrame(11, 1.f)},
+		[blankMan] {blankMan->SetCurrentAnimation("right"); }
+	);
+	left.frames[1].SetDuration(1.f / 3.f);
+	blankMan->AddAnimation(left, "left");
+
+	blankMan->SetCurrentAnimation("left");
 	blankMan->diffuseColor = Color::Hex(0xADD8E6);
 	blankMan->SetLocalPosition(100, 100);
 
 	AnimationSprite* blankMan2 = new AnimationSprite(RS__BLANK_WALKING_PNG, 3, 4);
 	blankMan2->Load();
+	blankMan2->GetCurrentAnimation().speed = 0.1f;
 	blankMan2->diffuseColor = Color::Hex(0xFF7F7F);
 	blankMan2->SetLocalPosition(500, 100);
 
@@ -68,32 +90,40 @@ int main()
 
 	//==============
 
-	unsigned int i = 0;
+	float deltaTime = 0.f;
+	std::chrono::steady_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+
 	//Main loop
 	while (window.IsOpen())
 	{
-		window.Clear();
-
-		//Update loop
-		window.Draw(brickImage);
-		window.Draw(winImage);
+		//Udate loop
 		brickImage->identity.Rotate(0.01f);
 		winImage->SetGlobalRotation(0);
+		blankMan->GetCurrentAnimation().Animate(deltaTime);
+		blankMan2->GetCurrentAnimation().Animate(deltaTime);
+		blankMan->Update();
+		blankMan2->Update();
 
+		window.Clear();
+
+		//Draw loop
+		window.Draw(brickImage);
+		window.Draw(winImage);
 		window.Draw(blankMan);
 		window.Draw(blankMan2);
-		blankMan->SetCurrentFrame((i / 15) + 3);
-		blankMan2->SetCurrentFrame((i / 15) + 6);
-		i++;
-
-		if (i >= (3 * 15)) i = 0;
 
 		window.Display();
+
+		std::chrono::steady_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+		std::chrono::milliseconds ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+		deltaTime = ms_int.count() / 1000.f;
+		t1 = std::chrono::high_resolution_clock::now();
 	}
 
 	delete brickImage;
 	delete winImage;
 	delete blankMan;
+	delete blankMan2;
 
 	texureCache.Clear();
 	shaderCache.Clear();

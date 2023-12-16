@@ -4,8 +4,8 @@
 
 precision highp float;
 
-layout(location = 1) uniform sampler2D diffuseTexture;
-layout(location = 2) uniform vec4 diffuseColor = vec4(1.0f);
+layout(location = 2) uniform sampler2D diffuseTexture;
+layout(location = 3) uniform vec4 diffuseColor = vec4(1.0f);
 
 in vec2 texCoord;
 

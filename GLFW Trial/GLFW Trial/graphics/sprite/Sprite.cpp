@@ -113,49 +113,51 @@ void Sprite::SetFilter(GLint a_minFilter, GLint a_magFilter)
 
 void Sprite::Display(const Matrix3& a_pojectionMatrix) const
 {
-	//tell the GPU to use this program
+	initializeShader();
+
+	setShaderValues(a_pojectionMatrix);
+
+	drawAndDisableArrays();
+}
+
+void Sprite::initializeShader() const
+{
 	glUseProgram(m_texShader.GetProgramID());
 
+}
+
+void Sprite::setShaderValues(const Matrix3& a_pojectionMatrix) const
+{
 	Matrix modelView = a_pojectionMatrix * m_textureTransform.GetGlobalMatrix();
 	glUniformMatrix3fv(m_texShader.GetMVPMatrix(), 1, GL_FALSE, modelView.GetArray().Data());
 
-	glUniform4f(m_texShader.GetDiffuseColorIndex(), 
-		diffuseColor.GetRedUnit(), 
-		diffuseColor.GetGreenUnit(), 
-		diffuseColor.GetBlueUnit(), 
+	glUniform4f(m_texShader.GetDiffuseColorIndex(),
+		diffuseColor.GetRedUnit(),
+		diffuseColor.GetGreenUnit(),
+		diffuseColor.GetBlueUnit(),
 		diffuseColor.GetAlphaUnit()
 	);
 
-	//tell OpenGL that the data for the vertexIndex is coming in from an array
+	glUniformMatrix3fv(m_texShader.GetUVOffsetIndex(), 1, GL_FALSE, m_uvOffset.GetArray().Data());
+
 	glEnableVertexAttribArray(m_texShader.GetVertexIndex());
-	//bind the buffer with data.
-	//the moment this buffer is bound instead of 0, the last param of glVertexAttribPointer
-	//is interpreted as an offset and not a pointer
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-	//send the data for this index to OpenGL, specifying it's format and structure
-	//vertexIndex // 3 bytes per element // floats // don't normalize // the data itself
 	glVertexAttribPointer(m_texShader.GetVertexIndex(), 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	//tell OpenGL that the data for the vertexIndex/colorIndex is coming in from an array
 	glEnableVertexAttribArray(m_texShader.GetUvIndex());
-	//bind the buffer with data.
-	//the moment this buffer is bound instead of 0, the last param of glVertexAttribPointer
-	//is interpreted as an offset and not a pointer
 	glBindBuffer(GL_ARRAY_BUFFER, m_uvsBuffer);
-	//send the data for this index to OpenGL, specifying it's format and structure
-	//vertexIndex // 3 bytes per element // floats // don't normalize // the data itself
 	glVertexAttribPointer(m_texShader.GetUvIndex(), 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	//setup texture slot 0
 	glActiveTexture(GL_TEXTURE0);
-	//bind the texture to the current active slot
 	glBindTexture(GL_TEXTURE_2D, m_texture.GetId());
-	//tell the shader the texture slot for the diffuse texture is slot 0
 	glUniform1i(m_texShader.GetDiffuseTextureIndex(), 0);
+}
 
-	//Draws elements from each enabled array using the specified mode (which is default for Unity etc as well)
+void Sprite::drawAndDisableArrays() const
+{
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	glDisableVertexAttribArray(m_texShader.GetVertexIndex());
 	glDisableVertexAttribArray(m_texShader.GetUvIndex());
 }
+

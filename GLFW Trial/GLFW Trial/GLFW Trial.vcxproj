@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="graphics\animations\animation\Animation.cpp" />
     <ClCompile Include="core\math\DynamicFloatArray.cpp" />
     <ClCompile Include="core\math\Matrix.cpp" />
     <ClCompile Include="core\math\Matrix3.cpp" />
@@ -152,7 +153,7 @@
     <ClCompile Include="graphics\GLBuffer\GLBuffer.cpp" />
     <ClCompile Include="graphics\loaders\ShaderUtil.cpp" />
     <ClCompile Include="graphics\shader\Shader.cpp" />
-    <ClCompile Include="graphics\sprite\animationSprite\AnimationSprite.cpp" />
+    <ClCompile Include="graphics\animations\animationSprite\AnimationSprite.cpp" />
     <ClCompile Include="graphics\sprite\Sprite.cpp" />
     <ClCompile Include="graphics\sprite\TextureShader.cpp" />
     <ClCompile Include="graphics\texture\Texture.cpp" />
@@ -162,12 +163,15 @@
     <ClCompile Include="resourceManager\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="graphics\animations\animation\Animation.hpp" />
+    <ClInclude Include="graphics\animations\animation\AnimationFrame.hpp" />
     <ClInclude Include="core\counted\Counted.hpp" />
     <ClInclude Include="core\math\DynamicFloatArray.hpp" />
     <ClInclude Include="core\math\Matrix.hpp" />
     <ClInclude Include="core\math\Matrix3.hpp" />
     <ClInclude Include="core\math\Vec2.hpp" />
     <ClInclude Include="core\Transform.hpp" />
+    <ClInclude Include="graphics\animations\animationSprite\AnimationSprite.hpp" />
     <ClInclude Include="graphics\Clolor.hpp" />
     <ClInclude Include="graphics\displayMode\DisplayMode.hpp" />
     <ClInclude Include="graphics\GLBuffer\GLBuffer.hpp" />
