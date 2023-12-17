@@ -17,6 +17,7 @@ private:
 
 public:
 	AnimationSprite(const unsigned int a_resourceID, const unsigned int a_columns, const unsigned int a_rows);
+	AnimationSprite(const unsigned int a_resourceID, const unsigned int a_columns, const unsigned int a_rows, const unsigned int a_frameCountAnimation);
 	AnimationSprite(const unsigned int a_resourceID, const unsigned int a_columns, const unsigned int a_rows, const Animation& a_animation);
 
 public:

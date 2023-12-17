@@ -76,7 +76,7 @@ int main()
 	blankMan->diffuseColor = Color::Hex(0xADD8E6);
 	blankMan->SetLocalPosition(100, 100);
 
-	AnimationSprite* blankMan2 = new AnimationSprite(RS__BLANK_WALKING_PNG, 3, 4);
+	AnimationSprite* blankMan2 = new AnimationSprite(RS__BLANK_WALKING_PNG, 3, 4, 3);
 	blankMan2->Load();
 	blankMan2->GetCurrentAnimation().speed = 0.1f;
 	blankMan2->diffuseColor = Color::Hex(0xFF7F7F);

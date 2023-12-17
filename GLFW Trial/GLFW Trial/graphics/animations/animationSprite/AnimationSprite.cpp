@@ -4,16 +4,26 @@
 #include "../../../resourceManager/ResourceManager.hpp"
 #include "../../../Resources/fileIndex.hpp"
 
-AnimationSprite::AnimationSprite(const unsigned int a_resourceID, const unsigned int a_columns, const unsigned int a_rows) : Sprite(a_resourceID)
+AnimationSprite::AnimationSprite(const unsigned int a_resourceID, const unsigned int a_columns, const unsigned int a_rows)
+	:AnimationSprite(a_resourceID, a_columns, a_rows, a_columns* a_rows)
+{
+}
+
+AnimationSprite::AnimationSprite(const unsigned int a_resourceID, const unsigned int a_columns, const unsigned int a_rows, const unsigned int a_frameCountAnimation) 
+	: Sprite(a_resourceID)
 {
 	setValues(a_columns, a_rows);
-	AddAnimation(Animation(0, a_columns * a_rows - 1, 1.f / 60.f), "Default");
+
+	const unsigned int maxFrameCount = a_columns * a_rows;
+	const unsigned int frameCountAnimation = (a_frameCountAnimation > maxFrameCount) ? maxFrameCount : a_frameCountAnimation;
+	AddAnimation(Animation(0, frameCountAnimation - 1, 1.f / 60.f), "Default");
 }
 
 AnimationSprite::AnimationSprite(const unsigned int a_resourceID, const unsigned int a_columns, const unsigned int a_rows, const Animation& a_animation)
-	: Sprite(a_resourceID), m_animations({a_animation})
+	: Sprite(a_resourceID)
 {
 	setValues(a_columns, a_rows);
+	AddAnimation(a_animation, "Default");
 }
 
 void AnimationSprite::setValues(const unsigned int a_columns, const unsigned int a_rows)
