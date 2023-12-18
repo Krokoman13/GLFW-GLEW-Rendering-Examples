@@ -84,6 +84,17 @@ bool Sprite::loadUVBuffer()
 	return m_uvsBuffer.GetId() != 0;
 }
 
+Vec2 Sprite::GetSize()
+{
+	return m_textureTransform.GetLocalScale();
+}
+
+void Sprite::SetSize(const Vec2 a_size)
+{
+	m_textureTransform.SetLocalScale(a_size);
+}
+
+
 bool Sprite::loadShader()
 {
 	m_texShader = ResourceManager::GetShader(RS__TEXTURE_VERT, RS__TEXTURE_FRAG);

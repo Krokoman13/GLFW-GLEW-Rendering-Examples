@@ -43,6 +43,8 @@ public:
 	virtual void Display(const Matrix3& a_pojectionMatrix) const override;
 	void SetFilter(GLint a_minFilter, GLint a_magFilter);
 	void SetDisplayMode(const DisplayMode a_displayMode);
+	Vec2 GetSize();
+	void SetSize(const Vec2 a_size);
 
 protected:
 	bool loadTexture();

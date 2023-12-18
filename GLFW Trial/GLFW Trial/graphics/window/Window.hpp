@@ -29,7 +29,7 @@ public:
 	operator Matrix3() const { return getMatrix(); }
 
 private:
-	inline Matrix3 getMatrix() const { return (Matrix3)(identity * m_ortho); }
+	inline Matrix3 getMatrix() const { return (Matrix3)(m_ortho * identity); }
 };
 
 class Window
