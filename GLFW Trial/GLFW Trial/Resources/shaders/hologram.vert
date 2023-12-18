@@ -1,4 +1,4 @@
-//DIFFUSE TEXTURE VERTEX SHADER
+//HOLOGRAM VERTEX SHADER
 #version 330
 #extension GL_ARB_explicit_uniform_location : require
 
@@ -11,8 +11,10 @@ layout(location = 0) uniform mat3 mvp; // combined model-view-projection matrix
 layout(location = 1) uniform mat3 uvOffset; // matrix for offset of uv
 
 out vec2 texCoord;
+out vec3 worldVertex;
 
 void main(void) {
-  gl_Position = vec4(mvp * vec3(vertex, 1.f), 1.f);
-  texCoord = vec2(uvOffset * vec3(uv, 1.f));
+	worldVertex = mvp * vec3(vertex, 1.f);
+	gl_Position = vec4(worldVertex, 1.f);
+	texCoord = vec2(uvOffset * vec3(uv, 1.f));
 }

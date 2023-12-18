@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ExtraSprites\Hologram\HologramSprite.cpp" />
     <ClCompile Include="graphics\animations\animation\Animation.cpp" />
     <ClCompile Include="core\math\DynamicFloatArray.cpp" />
     <ClCompile Include="core\math\Matrix.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="resourceManager\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ExtraSprites\Hologram\HologramSprite.hpp" />
     <ClInclude Include="graphics\animations\animation\Animation.hpp" />
     <ClInclude Include="graphics\animations\animation\AnimationFrame.hpp" />
     <ClInclude Include="core\counted\Counted.hpp" />

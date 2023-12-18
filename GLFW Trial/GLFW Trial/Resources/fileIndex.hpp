@@ -6,6 +6,8 @@
 
 #define RS__TEXTURE_FRAG	1		 //Resources\shaders\texture.frag
 #define RS__BLANK_WALKING_PNG	9		 //Resources\animationSheets\blank-walking.png
+#define RS__HOLOGRAM_FRAG	3		 //Resources\shaders\hologram.frag
+#define RS__HOLOGRAM_VERT	8		 //Resources\shaders\hologram.vert
 #define RS__TEXTURE_VERT	2		 //Resources\shaders\texture.vert
 #define RS__BRICKS_COPY_JPG	4		 //Resources\textures\bricks-Copy.jpg
 #define RS__BRICKS_JPG	5		 //Resources\textures\bricks.jpg

@@ -18,6 +18,8 @@
 #include "resourceManager/ResourceCache/SelfRegResourceCache.hpp"
 #include "resourceManager/ResourceManager.hpp"
 
+#include "ExtraSprites/Hologram/HologramSprite.hpp"
+
 #include "Resources/fileIndex.hpp"
 
 int main()
@@ -25,7 +27,7 @@ int main()
 	//PathManager::ResetPaths();
 	PathManager::MapPaths();
 
-	SelfRegResourceCache<Texture, std::string> texureCache;
+	ResourceCache<Texture, std::string> texureCache;
 	ResourceCache<Shader, std::string> shaderCache;
 	ResourceCache<GLBuffer, unsigned int> bufferCache;
 
@@ -37,14 +39,7 @@ int main()
 
 	//==============
 
-	{
-		Sprite* brickImage = new Sprite(RS__BRICKS_JPG);
-		brickImage->Load();
-		brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
-		delete brickImage;
-	}
-
-	Sprite* brickImage = new Sprite(RS__BRICKS_JPG);
+	Sprite* brickImage = new HologramSprite(RS__BRICKS_JPG);
 	brickImage->Load();
 	brickImage->SetLocalPosition(window.camera.GetSize() / 2.f);
 
@@ -52,35 +47,35 @@ int main()
 	winImage->SetFilter(GL_NEAREST, GL_NEAREST);
 	winImage->Load();
 
-	AnimationSprite* blankMan = new AnimationSprite(RS__BLANK_WALKING_PNG, 3, 4);
-	blankMan->SetFilter(GL_NEAREST, GL_NEAREST);
-	blankMan->Load();
+	AnimationSprite* walkingMan = new AnimationSprite(RS__BLANK_WALKING_PNG, 3, 4);
+	walkingMan->SetFilter(GL_NEAREST, GL_NEAREST);
+	walkingMan->Load();
 
 	Animation right(
 		{AnimationFrame(3, 1.f), AnimationFrame(4, 0.3f), AnimationFrame(5, 0.3f), 
 		 AnimationFrame(3, 0.3f), AnimationFrame(4, 0.3f), AnimationFrame(5, 1.f) },
-		[blankMan] {blankMan->SetCurrentAnimation("left"); }
+		[walkingMan] {walkingMan->SetCurrentAnimation("left"); }
 	);
 	right.frames[1].SetDuration(1.f / 3.f);
-	blankMan->AddAnimation(right, "right");
+	walkingMan->AddAnimation(right, "right");
 
 	Animation left(
 		{AnimationFrame(9, 1.f), AnimationFrame(10, 0.3f), AnimationFrame(11, 0.3f), 
 		AnimationFrame(9, 0.3f), AnimationFrame(10, 0.3f), AnimationFrame(11, 1.f)},
-		[blankMan] {blankMan->SetCurrentAnimation("right"); }
+		[walkingMan] {walkingMan->SetCurrentAnimation("right"); }
 	);
 	left.frames[1].SetDuration(1.f / 3.f);
-	blankMan->AddAnimation(left, "left");
+	walkingMan->AddAnimation(left, "left");
 
-	blankMan->SetCurrentAnimation("left");
-	blankMan->diffuseColor = Color::Hex(0xADD8E6);
-	blankMan->SetLocalPosition(100, 100);
+	walkingMan->SetCurrentAnimation("left");
+	walkingMan->diffuseColor = Color::Hex(0xADD8E6);
+	walkingMan->SetLocalPosition(100, 100);
 
-	AnimationSprite* blankMan2 = new AnimationSprite(RS__BLANK_WALKING_PNG, 3, 4, 3);
-	blankMan2->Load();
-	blankMan2->GetCurrentAnimation().speed = 0.1f;
-	blankMan2->diffuseColor = Color::Hex(0xFF7F7F);
-	blankMan2->SetLocalPosition(500, 100);
+	AnimationSprite* walkingMan2 = new AnimationSprite(RS__BLANK_WALKING_PNG, 3, 4);
+	walkingMan2->Load();
+	walkingMan2->GetCurrentAnimation().speed = 0.1f;
+	walkingMan2->diffuseColor = Color::Hex(0xFF7F7F);
+	walkingMan2->SetLocalPosition(500, 100);
 
 	//brickImage->SetLocalPosition(Vec2(1, 1));
 
@@ -99,18 +94,18 @@ int main()
 		//Udate loop
 		brickImage->identity.Rotate(0.01f);
 		winImage->SetGlobalRotation(0);
-		blankMan->GetCurrentAnimation().Animate(deltaTime);
-		blankMan2->GetCurrentAnimation().Animate(deltaTime);
-		blankMan->Update();
-		blankMan2->Update();
+		walkingMan->GetCurrentAnimation().Animate(deltaTime);
+		walkingMan2->GetCurrentAnimation().Animate(deltaTime);
+		walkingMan->Update();
+		walkingMan2->Update();
 
 		window.Clear();
 
 		//Draw loop
 		window.Draw(brickImage);
 		window.Draw(winImage);
-		window.Draw(blankMan);
-		window.Draw(blankMan2);
+		window.Draw(walkingMan);
+		window.Draw(walkingMan2);
 
 		window.Display();
 
@@ -122,8 +117,8 @@ int main()
 
 	delete brickImage;
 	delete winImage;
-	delete blankMan;
-	delete blankMan2;
+	delete walkingMan;
+	delete walkingMan2;
 
 	texureCache.Clear();
 	shaderCache.Clear();
